@@ -1,4 +1,4 @@
-import { Member, User } from "../global.d.ts"
+import type { Member, User } from "../global.d.ts"
 
 const ts2dc = (ts: number, type?: string) => `<t:${Math.round(ts / 1000)}:${type ?? "F"}>`
 
