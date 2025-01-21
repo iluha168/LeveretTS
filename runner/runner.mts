@@ -1,5 +1,5 @@
 import { UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
-import type { Message, Tag } from "../global.d.ts"
+import type { Embed, Message, Tag } from "../global.d.ts"
 
 const tagSource = Deno.args[0]
 if (!tagSource) {
@@ -76,8 +76,14 @@ globalThis.tag = {
 globalThis.msg = {
 	guildId: null,
 	channelId: "420",
-	reply(...args: unknown[]) {
-		console.log(...args.map((a) => JSON.stringify(a, null, 2)))
+	reply(content: string | Embed, embed?: Embed) {
+		if (typeof content !== "string") {
+			content = JSON.stringify(content, null, 2)
+		}
+		console.log(content)
+		if (embed) {
+			console.log(JSON.stringify(content, null, 2))
+		}
 		Deno.exit(0)
 	},
 	author: {
