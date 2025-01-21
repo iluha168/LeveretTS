@@ -1,4 +1,4 @@
-import {} from "../global.d.ts"
+import type {} from "../global.d.ts"
 
 msg.reply((() => {
 	const filter = tag.args
