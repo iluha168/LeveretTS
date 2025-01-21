@@ -1,0 +1,7 @@
+dist/
+node_modules/
+
+.env
+
+# Fill the database with your example tags
+runner/db.txt
