@@ -14,9 +14,11 @@ const dbEntrySchema = z.intersection(
 	]),
 )
 
+export type dbEntry = z.infer<typeof dbEntrySchema>
+
 export const tags = new Map<
 	string, // Tag name
-	z.infer<typeof dbEntrySchema>
+	dbEntry
 >()
 
 for (

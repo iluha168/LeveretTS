@@ -55,7 +55,7 @@ export type GuildChannel = Channel & {
 export type Message =
 	& {
 		reply(content: string, embed?: Embed): never
-		reply(embed?: Embed): never
+		reply(embed: Embed): never
 		reply(content: string | Embed): never
 		channelId: Snowflake
 	}
