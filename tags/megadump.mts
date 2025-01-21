@@ -1,4 +1,5 @@
 import type {} from "../global.d.ts"
+import type { dbEntry } from "../runner/dbReader.mts"
 
 if (!tag.args) {
 	throw "Usage: %t megadump 400-1000"
@@ -9,23 +10,27 @@ msg.reply(
 	util
 		.dumpTags()
 		.slice(rangeB, rangeE)
-		.map((n) => {
-			let alias_target
-			let content
+		.map((name) => {
+			let owner: string = "0"
+			let alias: string | null = null
+			let body: string = ""
 			try {
-				const tag = util.fetchTag(n)!
+				const tag = util.fetchTag(name)!
+				if ("body" in tag) {
+					body = tag.body
+					owner = tag.owner
+				}
 				if (tag.hops.length > 1) {
-					alias_target = tag.hops[1]
-				} else {
-					content = tag
+					alias = tag.hops[1]
 				}
 			} catch (e) {
-				;[n, alias_target] = Array.from((e as Error).message
+				;[, alias] = Array.from((e as Error).message
 					.matchAll(/\*\*(.*?)\*\*/g))
 					.map((m) => m[1])
 			}
-			return n + "\t" +
-				(alias_target ? alias_target : JSON.stringify(content))
+			return name + "\t" + JSON.stringify(
+				(alias ? { owner, alias } : { owner, body }) satisfies dbEntry,
+			)
 		})
 		.join("\n") + "\n",
 )
