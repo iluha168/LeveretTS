@@ -5,7 +5,7 @@
 
 import { RESTDeleteAPIChannelMessageResult, RESTPostAPIChannelMessageJSONBody, RESTPostAPIChannelMessageResult } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 import { delay } from "jsr:@std/async/delay"
-import { api, LEVERET_ID } from "./discordCommons.mts"
+import { api, LEVERET_ID_CHANNEL } from "./discordCommons.mts"
 
 const TAG_NAME = Deno.args[0]
 if (!TAG_NAME) {
@@ -24,9 +24,9 @@ const source = Deno.readTextFileSync(SOURCE_FILE).replaceAll(";export{};", "")
 const { id } = await api<
 	RESTPostAPIChannelMessageResult,
 	RESTPostAPIChannelMessageJSONBody
->("POST", `channels/${LEVERET_ID}/messages`, {
+>("POST", `channels/${LEVERET_ID_CHANNEL}/messages`, {
 	content: "%t edit " + TAG_NAME + " ```js\n" + source + "```",
 })
 
 await delay(3000)
-await api<RESTDeleteAPIChannelMessageResult>("DELETE", `channels/${LEVERET_ID}/messages/${id}`)
+await api<RESTDeleteAPIChannelMessageResult>("DELETE", `channels/${LEVERET_ID_CHANNEL}/messages/${id}`)
