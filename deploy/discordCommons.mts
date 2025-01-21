@@ -11,7 +11,8 @@ if (!TOKEN) {
 	Deno.exit(1)
 }
 
-export const LEVERET_ID = "1311038077313220780"
+export const LEVERET_ID_CHANNEL = "1311038077313220780"
+export const LEVERET_ID_BOT = "708269782482550814"
 
 export async function api<Res, Req = undefined>(
 	method: "GET" | "POST" | "DELETE" | "PATCH",
@@ -22,7 +23,7 @@ export async function api<Res, Req = undefined>(
 		headers: {
 			"Authorization": TOKEN,
 			"Origin": "https://discord.com",
-			"Referer": "https://discord.com/channels/@me/" + LEVERET_ID,
+			"Referer": "https://discord.com/channels/@me/" + LEVERET_ID_CHANNEL,
 			...(body
 				? {
 					"Content-Type": "application/json",
