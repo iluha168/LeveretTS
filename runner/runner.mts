@@ -1,79 +1,8 @@
 import { UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
-import type { Embed, Message, Tag } from "../global.d.ts"
-
-const tagSource = Deno.args[0]
-if (!tagSource) {
-	console.error("Please provide a source file")
-	Deno.exit(1)
-}
-
+import type { Embed, EvalContext, Message } from "../typings/leveret.d.ts"
 import { tags } from "./dbReader.mts"
 
-globalThis.util = {
-	dumpTags() {
-		return tags.keys().toArray()
-	},
-	fetchTag(name: string) {
-		const hops = [name]
-		let tag = tags.get(name)
-
-		for (;;) { // Alias-resolving loop
-			if (tag === undefined) {
-				return hops.length ? { hops } : null
-			}
-			if (!("alias" in tag)) {
-				break
-			}
-
-			const { alias } = tag
-			if (hops.includes(alias)) {
-				const chain = hops.concat([alias]).map((n) => `**${n}**`).join(" -> ")
-				throw new Error(`Epic recursion error: ${chain}.`)
-			}
-			hops.push(alias)
-			tag = tags.get(alias)
-		}
-		return structuredClone(Object.assign(
-			Object.create(null),
-			tag,
-			{ hops, name },
-		))
-	},
-	findUsers(filter: string) {
-		return [msg.author].filter((u) => u.tag.includes(filter))
-	},
-	executeTag(name: string, ...args: string[]) {
-		const tag = this.fetchTag(name)
-		if (!tag || !("body" in tag)) {
-			throw new Error(`Tag ${name} doesn't exist`)
-		}
-
-		const match = tag.body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)
-		if (!match?.[2]) return tag.body
-
-		return new Function(
-			"code",
-			`with(this){return (()=>{"use strict";return eval(code)})()}`,
-		).call({
-			...globalThis,
-			tag: {
-				...tag,
-				args: args.join(" "),
-			},
-		}, match[2])
-	},
-}
-
-//@ts-ignore Global const
-globalThis.tag = {
-	body: Deno.readTextFileSync(tagSource),
-	name: tagSource,
-	owner: "420",
-	args: Deno.args.slice(1).join(" ") || undefined,
-} satisfies Tag
-
-//@ts-ignore Global const
-globalThis.msg = {
+export const defaultMsg = {
 	guildId: null,
 	channelId: "420",
 	reply(content: string | Embed, embed?: Embed) {
@@ -112,4 +41,84 @@ globalThis.msg = {
 	},
 } satisfies Message
 
-import("../" + tagSource)
+export const defaultUtil = {
+	dumpTags() {
+		return tags.keys().toArray()
+	},
+	fetchTag(name: string) {
+		const hops = [name]
+		let tag = tags.get(name)
+
+		for (;;) { // Alias-resolving loop
+			if (tag === undefined) {
+				return hops.length ? { hops } : null
+			}
+			if (!("alias" in tag)) {
+				break
+			}
+
+			const { alias } = tag
+			if (hops.includes(alias)) {
+				const chain = hops.concat([alias]).map((n) => `**${n}**`).join(" -> ")
+				throw new Error(`Epic recursion error: ${chain}.`)
+			}
+			hops.push(alias)
+			tag = tags.get(alias)
+		}
+		return structuredClone(Object.assign(
+			Object.create(null),
+			tag,
+			{ hops, name },
+		))
+	},
+	findUsers(filter: string) {
+		return [defaultMsg.author].filter((u) => u.tag.includes(filter))
+	},
+	executeTag(name: string, ...args: string[]) {
+		const tag = this.fetchTag(name)
+		if (!tag || !("body" in tag)) {
+			throw new Error(`Tag ${name} doesn't exist`)
+		}
+
+		const match = tag.body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)
+		if (!match?.[2]) return tag.body
+
+		return new Function(
+			"code",
+			`with(this){return (()=>{"use strict";return eval(code)})()}`,
+		).call(
+			{
+				util: defaultUtil,
+				msg: defaultMsg,
+				tag: {
+					...tag,
+					args: args.join(" "),
+				},
+			} satisfies EvalContext,
+			match[2],
+		)
+	},
+}
+
+if (import.meta.main) {
+	const tagSource = Deno.args[0]
+	if (!tagSource) {
+		console.error("Please provide a source file")
+		Deno.exit(1)
+	}
+	// Debug tag without eval or sandboxing
+	Object.assign(
+		globalThis,
+		{
+			util: defaultUtil,
+			msg: defaultMsg,
+			tag: {
+				owner: "0",
+				name: tagSource,
+				body: Deno.readTextFileSync(tagSource),
+				args: Deno.args.slice(1).join(" "),
+			},
+		} satisfies EvalContext,
+	)
+	import("../" + tagSource)
+}

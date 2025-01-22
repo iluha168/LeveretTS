@@ -1,4 +1,4 @@
-import type {} from "../global.d.ts"
+import type {} from "../typings/tagEvalContext.d.ts"
 import type { dbEntry } from "../runner/dbReader.mts"
 
 if (!tag.args) {

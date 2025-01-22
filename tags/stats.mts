@@ -1,4 +1,4 @@
-import type {} from "../global.d.ts"
+import type {} from "../typings/tagEvalContext.d.ts"
 
 function counter() {
 	const state: Record<number, number> = {}

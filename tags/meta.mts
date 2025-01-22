@@ -1,4 +1,4 @@
-import {} from "../global.d.ts"
+import type {} from "../typings/tagEvalContext.d.ts"
 
 const codeSep = "`".repeat(3)
 function cropBody(body: string) {

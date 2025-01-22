@@ -1,4 +1,4 @@
-import type {} from "../global.d.ts"
+import type {} from "../typings/tagEvalContext.d.ts"
 
 msg.reply((() => {
 	const filter = tag.args
