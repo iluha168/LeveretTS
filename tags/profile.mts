@@ -1,4 +1,5 @@
-import type { Member, User } from "../global.d.ts"
+import { Member, User } from "../typings/leveret.d.ts"
+import type {} from "../typings/tagEvalContext.d.ts"
 
 const ts2dc = (ts: number, type?: string) => `<t:${Math.round(ts / 1000)}:${type ?? "F"}>`
 

@@ -79,16 +79,17 @@ export type Tag = {
 	args?: string
 }
 
-declare global {
-	namespace util {
-		function dumpTags(): string[]
-		function fetchTag(name: string):
-			| (Hops | (Tag & Hops))
-			| null
-		function executeTag(name: string, ...args: string[]): unknown
-		function findUsers(filter: string): User[] | Member[]
-	}
+export type Util = {
+	dumpTags(): string[]
+	fetchTag(name: string):
+		| (Hops | (Tag & Hops))
+		| null
+	executeTag(name: string, ...args: string[]): unknown
+	findUsers(filter: string): User[] | Member[]
+}
 
-	const msg: Message
-	const tag: Tag
+export type EvalContext = {
+	msg: Message
+	tag: Tag
+	util: Util
 }
