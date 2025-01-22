@@ -30,7 +30,6 @@ for (
 	try {
 		tags.set(name, dbEntrySchema.parse(JSON.parse(data)))
 	} catch {
-		console.error("Invalid database entry:", data)
-		Deno.exit(1)
+		console.warn("Invalid database entry:", entry)
 	}
 }
