@@ -1,23 +1,61 @@
+import { EvalContext } from "../typings/leveret.d.ts"
 import type {} from "../typings/tagEvalContext.d.ts"
 
 try {
-    const args = tag.args?.split(" ")
-    if(!args?.length)
-        throw "%t bulk <tag name> <tag name> ..."
+	const args = tag.args?.split(" ")
+	if (!args?.length) {
+		throw "%t bulk <tag name> <tag name> ..."
+	}
 
-    msg.reply(args
-        .map(name => {
-            try {
-                const tag = util.fetchTag(name)
-                if(tag && "body" in tag)
-                    return tag.body
-                return `\`%t ${name} does not have text.\``
-            } catch {
-                return `\`%t ${name} does not exist.\``
-            }
-        })
-        .join("\n")
-    )
-} catch(e) {
-    msg.reply(`${e}`)
+	const chunks: string[] = []
+
+	for (const name of args) {
+		try {
+			const fetched = util.fetchTag(name)
+			if (!fetched || !("body" in fetched)) {
+				chunks.push(`\`%t ${name} does not have text.\``)
+				continue
+			}
+
+			const match = fetched.body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)
+			if (!match?.[2]) {
+				chunks.push(fetched.body)
+				continue
+			}
+
+			let hasNotUsed = true
+			const result = new Function(
+				"code",
+				`with(this){return (()=>{"use strict";return eval(code)})()}`,
+			).call(
+				{
+					util,
+					msg: Object.assign(
+						Object.create(null),
+						msg,
+						{
+							reply: (...args: unknown[]) => {
+								chunks.push(`${args.join(" ")}`)
+								hasNotUsed = false
+							},
+						},
+					),
+					tag: {
+						...fetched,
+						args: tag.args,
+					},
+				} satisfies EvalContext,
+				match[2],
+			)
+			if (hasNotUsed) {
+				chunks.push(`${result}`)
+			}
+		} catch {
+			chunks.push(`\`%t ${name} does not exist.\``)
+		}
+	}
+
+	msg.reply(chunks.join("\n"))
+} catch (e) {
+	msg.reply(`${e}`)
 }
