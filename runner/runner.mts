@@ -51,7 +51,7 @@ export const defaultUtil = {
 
 		for (;;) { // Alias-resolving loop
 			if (tag === undefined) {
-				return hops.length ? { hops } : null
+				return hops.length > 1 ? { hops } : null
 			}
 			if (!("alias" in tag)) {
 				break
