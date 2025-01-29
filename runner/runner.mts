@@ -116,7 +116,7 @@ if (import.meta.main) {
 				owner: "0",
 				name: tagSource,
 				body: Deno.readTextFileSync(tagSource),
-				args: Deno.args.slice(1).join(" "),
+				args: Deno.args.slice(1).join(" ") || undefined,
 			},
 		} satisfies EvalContext,
 	)
