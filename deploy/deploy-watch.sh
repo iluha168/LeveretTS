@@ -1,6 +1,7 @@
 #!/bin/bash
 if ! [ $1 ]; then
     echo Provide path to the tag source.
+    exit 1
 fi
 
 for((;;)); do
