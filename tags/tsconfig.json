@@ -1,7 +1,7 @@
 {
-    "compilerOptions": {
-        "module": "CommonJS",
-        "target": "ESNext",
-        "rewriteRelativeImportExtensions": true
-    },
+	"compilerOptions": {
+		"module": "CommonJS",
+		"target": "ESNext",
+		"rewriteRelativeImportExtensions": true
+	}
 }
