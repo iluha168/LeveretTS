@@ -54,7 +54,7 @@ type Predicate = (body: string) => unknown
             description: results
                 .slice(0,30)
                 .map(tag =>
-                    `\`%t ${tag.name}\`: ${tag.body
+                    `\`%t ${tag.name.replaceAll("\n", " ")}\`: ${tag.body
                         .replaceAll("\n", " ")
                         .slice(0,100)
                     }${tag.body.length>100?'…':''}`
