@@ -19,7 +19,7 @@ if (!SOURCE_FILE) {
 	Deno.exit(3)
 }
 
-const source = Deno.readTextFileSync(SOURCE_FILE).replaceAll(/;?export{};?/g, "")
+const source = Deno.readTextFileSync(SOURCE_FILE)
 
 const { id } = await api<
 	RESTPostAPIChannelMessageResult,
