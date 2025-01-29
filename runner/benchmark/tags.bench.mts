@@ -1,6 +1,6 @@
 const benchTag = (name: string, ...args: string[]) => {
 	Deno.bench(
-		{name: `%t ${name}`},
+		{ name: `%t ${name}` },
 		(b) => {
 			const cmd = new Deno.Command("deno", {
 				args: [
