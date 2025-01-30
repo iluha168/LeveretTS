@@ -1,11 +1,13 @@
 import { EvalContext } from "../typings/leveret.d.ts"
 import type {} from "../typings/tagEvalContext.d.ts"
+import { parseArgsParams } from "./lib/cli.mts"
 
 try {
-	const args = tag.args?.split(" ")
-	if (!args?.length) {
-		throw "%t bulk <tag name> <tag name> ..."
-	}
+	let separator = "\n"
+
+	const args = parseArgsParams("<tag name> <tag name> ...", {}, [
+		[/^--sep=([^]*)$/, (it) => separator = it],
+	])
 
 	const chunks: string[] = []
 
@@ -55,7 +57,7 @@ try {
 		}
 	}
 
-	msg.reply(chunks.join("\n"))
+	msg.reply(chunks.join(separator))
 } catch (e) {
 	msg.reply(`${e}`)
 }
