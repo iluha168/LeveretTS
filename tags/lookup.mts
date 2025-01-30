@@ -1,37 +1,25 @@
 import type { Hops, Tag } from "../typings/leveret.d.ts"
 import type {} from "../typings/tagEvalContext.d.ts"
+import { parseArgsParams } from "./lib/cli.mts"
 
 type Predicate = (body: string) => unknown
 ;(() => {
-	const args = (tag.args ?? "").split(" ")
-
 	let matcher: string | RegExp
 	const predicates: Predicate[] = [
 		(body) => body.match(matcher),
 	]
 	let filterAsRegEx = false
 
-	arg_loop: for (;; args.shift()) {
-		switch (args[0]) {
-			case undefined:
-				return msg.reply(
-					"%t lookup [--no-code] [--no-link] [--regex] <filter>",
-				)
-			case "--no-link":
-				predicates.push((body) => !body.match(/^https?:\/{2}[^ ]+$/))
-				break
-			case "--no-code":
-				predicates.push((body) => !body.match(/^`{3}(?:js)?\s+[^]*`{3}$/))
-				break
-			case "--regex":
-				filterAsRegEx = true
-				break
-			default:
-				break arg_loop
-		}
+	try {
+		matcher = parseArgsParams("<filter>", {
+			"--no-link": () => predicates.push((body) => !body.match(/^https?:\/{2}[^ ]+$/)),
+			"--no-code": () => predicates.push((body) => !body.match(/^`{3}(?:js)?\s+[^]*`{3}$/)),
+			"--regex": () => filterAsRegEx = true,
+		}).join(" ")
+	} catch (e) {
+		return msg.reply(e as string)
 	}
 
-	matcher = args.join(" ")
 	if (filterAsRegEx) {
 		matcher = new RegExp(matcher, "u")
 	}
