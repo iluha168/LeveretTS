@@ -1,4 +1,5 @@
 import type {} from "../typings/tagEvalContext.d.ts"
+import { parseArgsParams } from "./lib/cli.mts";
 
 const codeSep = "`".repeat(3)
 function cropBody(body: string) {
@@ -23,14 +24,14 @@ function cropToRight(str: string, len: number) {
 }
 
 msg.reply((() => {
-	if (!tag.args) {
-		return "Provide tag pls: %t meta <name>"
-	}
-	const args = tag.args.split(" ", 2)
-	const name = args.shift()!
-	if (args.length) {
+	let showPreview = true
+	const args = parseArgsParams("<tag name>", {
+		"--no-preview": () => showPreview = false
+	})
+	if (args.length > 1) {
 		return "You can only view 1 (one (0!)) tag at a time"
 	}
+	const [name] = args
 	const target = util.fetchTag(name)
 	if (!target) {
 		return "HTTP 404: https://leveret.com/api/t/" + name
@@ -45,7 +46,7 @@ msg.reply((() => {
 					value: `<@${target.owner}> (${target.owner})`,
 				}, {
 					name: "Preview",
-					value: cropBody(target.body),
+					value: showPreview? cropBody(target.body) : "`Omit by flag.`",
 				}]
 				: [],
 		},
