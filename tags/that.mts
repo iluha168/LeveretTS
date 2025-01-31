@@ -15,7 +15,8 @@ try {
 			.match(/%t\s+(?<a>.*?)(?:\s|$)|`%t\s+(?<b>[^]*?)`/)
 			?.groups ?? {},
 	)
-	const args = (match ?? target.content).split(" ")
+	const prepend = tag.args?.split(" ") ?? []
+	const args = prepend.concat((match ?? target.content).split(" "))
 
 	throw util.executeTag(args.shift()!, ...args)
 } catch (e) {

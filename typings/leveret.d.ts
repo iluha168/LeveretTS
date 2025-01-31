@@ -1,4 +1,4 @@
-import type { APIEmbed, APIMessageReference, MessageReferenceType, UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
+import type { APIEmbed, UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 
 export type Maybe<T> = T | Record<keyof T, null>
 
@@ -60,7 +60,7 @@ export type Message =
 		id: Snowflake
 		content: string
 		channelId: Snowflake
-		
+
 		reference: null | {
 			channelId: Snowflake
 			messageId: Snowflake
