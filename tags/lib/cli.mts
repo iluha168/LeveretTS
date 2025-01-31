@@ -1,19 +1,36 @@
 import type {} from "../../typings/tagEvalContext.d.ts"
 
+const fmtWithBrackets = (array: string[], bracketA: string, bracketB: string) =>
+	// deno-fmt-ignore
+	array.map(i => bracketA + i + bracketB).join(" ")
+
 /**
  * Parses command options and return what's left
  */
 export function parseArgsParams(
-	mainArgDesc: string,
-	options: Record<string, () => void>,
+	argsRequired: string[],
+	argsOptional: string[],
+	options: Record<string, () => void> = {},
 	regexOptions: [RegExp, (group: string) => void][] = [],
 ): string[] {
+	const help = () => {
+		// deno-fmt-ignore
+		throw `%t ${tag.name} ${
+			fmtWithBrackets(Object.keys(options),'[',']')
+		} ${
+			fmtWithBrackets(argsRequired, '<', '>')
+		} ${
+			fmtWithBrackets(argsOptional, '(', ')')
+		}`
+	}
+	options["--help"] = help
+
 	const args = tag.args?.split(/(?<!\\) /g) ?? []
 	for (;; args.shift()) {
 		const arg = args[0]?.replaceAll("\\ ", " ")
 
 		if (!arg) {
-			throw `%t ${tag.name} ${Object.keys(options).map((k) => `[${k}]`).join(" ")} ${mainArgDesc}`
+			break
 		}
 
 		if (arg in options) {
@@ -29,7 +46,10 @@ export function parseArgsParams(
 				continue
 			}
 		}
-
-		return args
+		break
 	}
+	if (args.length < argsRequired.length) {
+		help()
+	}
+	return args
 }
