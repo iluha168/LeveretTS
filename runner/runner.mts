@@ -1,8 +1,11 @@
 import { UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
-import type { Embed, EvalContext, Message } from "../typings/leveret.d.ts"
+import type { Embed, EvalContext, Message, Util } from "../typings/leveret.d.ts"
 import { tags } from "./dbReader.mts"
 
-export const defaultMsg = {
+export const defaultMsg: Message = {
+	id: "420",
+	reference: null,
+	content: "bla bla",
 	guildId: null,
 	channelId: "420",
 	reply(content: string | Embed, embed?: Embed) {
@@ -39,9 +42,9 @@ export const defaultMsg = {
 		createdTimestamp: Date.now(),
 		messages: ["420"],
 	},
-} satisfies Message
+}
 
-export const defaultUtil = {
+export const defaultUtil: Util = {
 	dumpTags() {
 		return tags.keys().toArray()
 	},
@@ -71,8 +74,8 @@ export const defaultUtil = {
 			{ hops, name },
 		))
 	},
-	findUsers(filter: string) {
-		return [defaultMsg.author].filter((u) => u.tag.includes(filter))
+	findUsers() {
+		return []
 	},
 	executeTag(name: string, ...args: string[]) {
 		const tag = this.fetchTag(name)
@@ -98,6 +101,9 @@ export const defaultUtil = {
 			match[2],
 		)
 	},
+	fetchMessages() {
+		return [defaultMsg]
+	}
 }
 
 if (import.meta.main) {

@@ -1,4 +1,4 @@
-import type { APIEmbed, UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
+import type { APIEmbed, APIMessageReference, MessageReferenceType, UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 
 export type Maybe<T> = T | Record<keyof T, null>
 
@@ -57,7 +57,14 @@ export type Message =
 		reply(content: string, embed?: Embed): never
 		reply(embed: Embed): never
 		reply(content: string | Embed): never
+		id: Snowflake
+		content: string
 		channelId: Snowflake
+		
+		reference: null | {
+			channelId: Snowflake
+			messageId: Snowflake
+		}
 	}
 	& ({
 		guildId: null
@@ -85,7 +92,9 @@ export type Util = {
 		| (Hops | (Tag & Hops))
 		| null
 	executeTag(name: string, ...args: string[]): unknown
-	findUsers(filter: string): User[] | Member[]
+	/** Not available outside a guild */
+	findUsers?: (filter: string) => Member[]
+	fetchMessages(id?: Snowflake): Message[]
 }
 
 export type EvalContext = {
