@@ -7,9 +7,9 @@ msg.reply((() => {
 	if (tag.args && !util.findUsers) {
 		return "`%t profile <username>` must be used in a server!"
 	}
-	let me: User | Member
+	let me: User | Member | undefined
 	if (tag.args) {
-		me = util.findUsers(tag.args)[0]
+		me = util.findUsers?.(tag.args)[0]
 	}
 	me ??= msg.author
 	const discr = me.discriminator === "0" ? "" : ("#" + me.discriminator)

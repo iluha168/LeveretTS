@@ -5,15 +5,19 @@ import { parseArgsParams } from "./lib/cli.mts"
 type Predicate = (body: string) => unknown
 ;(() => {
 	let matcher: string | RegExp
-	const predicates: Predicate[] = [
+	const predicateLink: Predicate = (body) => !body.match(/^https?:\/{2}[^ ]+$/)
+	const predicateCode: Predicate = (body) => !body.match(/^`{3}(?:js)?\s+[^]*`{3}$/)
+	const predicates: Set<Predicate> = new Set([
 		(body) => body.match(matcher),
-	]
+		predicateLink,
+		predicateCode,
+	])
 	let filterAsRegEx = false
 
 	try {
-		matcher = parseArgsParams("<filter>", {
-			"--no-link": () => predicates.push((body) => !body.match(/^https?:\/{2}[^ ]+$/)),
-			"--no-code": () => predicates.push((body) => !body.match(/^`{3}(?:js)?\s+[^]*`{3}$/)),
+		matcher = parseArgsParams(["filter"], [], {
+			"--with-links": () => predicates.delete(predicateLink),
+			"--with-code": () => predicates.delete(predicateCode),
 			"--regex": () => filterAsRegEx = true,
 		}).join(" ")
 	} catch (e) {
@@ -38,20 +42,20 @@ type Predicate = (body: string) => unknown
 		})
 		.filter((tag) =>
 			tag &&
-			predicates.every((p) => p(tag.body))
+			Array.from(predicates).every((p) => p(tag.body))
 		) as (Tag & Hops)[]
 
 	msg.reply({
 		embed: {
 			title: "%t||ags|| lookup",
 			description: results
-				.slice(0, 30)
+				.slice(0, 20)
 				.map((tag) =>
 					`\`%t ${tag.name.replaceAll("\n", " ")}\`: ${
 						tag.body
 							.replaceAll("\n", " ")
-							.slice(0, 100)
-					}${tag.body.length > 100 ? "…" : ""}`
+							.slice(0, 50)
+					}${tag.body.length > 50 ? "…" : ""}`
 				)
 				.join("\n")
 				.slice(0, 4096),

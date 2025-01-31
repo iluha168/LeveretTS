@@ -1,5 +1,5 @@
 import type {} from "../typings/tagEvalContext.d.ts"
-import { parseArgsParams } from "./lib/cli.mts";
+import { parseArgsParams } from "./lib/cli.mts"
 
 const codeSep = "`".repeat(3)
 function cropBody(body: string) {
@@ -25,8 +25,8 @@ function cropToRight(str: string, len: number) {
 
 msg.reply((() => {
 	let showPreview = true
-	const args = parseArgsParams("<tag name>", {
-		"--no-preview": () => showPreview = false
+	const args = parseArgsParams(["tag name"], [], {
+		"--no-preview": () => showPreview = false,
 	})
 	if (args.length > 1) {
 		return "You can only view 1 (one (0!)) tag at a time"
@@ -46,7 +46,7 @@ msg.reply((() => {
 					value: `<@${target.owner}> (${target.owner})`,
 				}, {
 					name: "Preview",
-					value: showPreview? cropBody(target.body) : "`Omit by flag.`",
+					value: showPreview ? cropBody(target.body) : "`Omit by flag.`",
 				}]
 				: [],
 		},

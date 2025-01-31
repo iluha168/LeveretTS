@@ -5,6 +5,9 @@ msg.reply((() => {
 	if (!filter) {
 		return "❌ No search filter specified"
 	}
+	if (!util.findUsers) {
+		return "❌ This only works in a guild"
+	}
 	const users = util.findUsers(filter).slice(0, 25)
 	if (!users.length) {
 		return "⚠️ No users match the filter"

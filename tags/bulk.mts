@@ -5,7 +5,7 @@ import { parseArgsParams } from "./lib/cli.mts"
 try {
 	let separator = "\n"
 
-	const args = parseArgsParams("<tag name> <tag name> ...", {}, [
+	const args = parseArgsParams(["tag name", "tag name"], ["..."], {}, [
 		[/^--sep=([^]*)$/, (it) => separator = it],
 	])
 
