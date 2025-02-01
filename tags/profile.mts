@@ -1,19 +1,22 @@
 import { Member, User } from "../typings/leveret.d.ts"
 import type {} from "../typings/tagEvalContext.d.ts"
+import { checkGuild } from "./lib/checkGuild.mts"
+import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
 const ts2dc = (ts: number, type?: string) => `<t:${Math.round(ts / 1000)}:${type ?? "F"}>`
 
-msg.reply((() => {
-	if (tag.args && !util.findUsers) {
-		return "`%t profile <username>` must be used in a server!"
-	}
+throwReply(() => {
+	checkGuild(util)
+	const [target] = parseArgsParams(["user"], [], "Renders a beautiful embed with the given member's information.")
+
 	let me: User | Member | undefined
 	if (tag.args) {
-		me = util.findUsers?.(tag.args)[0]
+		me = util.findUsers(target)[0]
 	}
 	me ??= msg.author
 	const discr = me.discriminator === "0" ? "" : ("#" + me.discriminator)
-	return {
+	throw {
 		embed: {
 			author: {
 				name: me.username + discr,
@@ -25,16 +28,18 @@ msg.reply((() => {
 				"Color": me.hexAccentColor,
 				"Account created": ts2dc(me.createdTimestamp),
 				"This server": "guildId" in me
-					? [
-						"Joined at " + ts2dc(me.joinedTimestamp),
-						me.premiumSinceTimestamp &&
-						`Server booster since ${ts2dc(me.premiumSinceTimestamp)}`,
-						me.nickname && `Nickname: ${me.nickname}`,
-						me.pending && `Did not finish joining`,
-						me.communicationDisabledUntilTimestamp &&
-						me.communicationDisabledUntilTimestamp > Date.now() &&
-						`Timeout ends ${ts2dc(me.communicationDisabledUntilTimestamp, "R")}`,
-					].filter((_) => _).join("\n")
+					? (() => {
+						const timeout = me.communicationDisabledUntilTimestamp
+						return [
+							"Joined at " + ts2dc(me.joinedTimestamp),
+							me.premiumSinceTimestamp &&
+							`Server booster since ${ts2dc(me.premiumSinceTimestamp)}`,
+							me.nickname && `Nickname: ${me.nickname}`,
+							me.pending && `Did not finish joining`,
+							timeout && timeout > Date.now() &&
+							`Timeout ends ${ts2dc(timeout, "R")}`,
+						].filter((_) => _).join("\n")
+					})()
 					: "I am not in a server 🐇",
 				"Roles": "roles" in me
 					? (me.roles.slice(0, 10).map((i) => `<@&${i}>`).join(
@@ -56,4 +61,4 @@ msg.reply((() => {
 			},
 		},
 	}
-})())
+})

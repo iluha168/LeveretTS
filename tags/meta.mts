@@ -1,5 +1,6 @@
 import type {} from "../typings/tagEvalContext.d.ts"
 import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
 const codeSep = "`".repeat(3)
 function cropBody(body: string) {
@@ -23,21 +24,17 @@ function cropToRight(str: string, len: number) {
 	return (str.length <= len) ? str : ("…" + str.slice(str.length - len + 1))
 }
 
-msg.reply((() => {
+throwReply(() => {
 	let showPreview = true
-	const args = parseArgsParams(["tag name"], [], {
+	const [name] = parseArgsParams(["tag name"], [], "Shows owner, alias chain, and part of content of the given tag.", {
 		"--no-preview": () => showPreview = false,
 	})
-	if (args.length > 1) {
-		return "You can only view 1 (one (0!)) tag at a time"
-	}
-	const [name] = args
 	const target = util.fetchTag(name)
 	if (!target) {
-		return "HTTP 404: https://leveret.com/api/t/" + name
+		throw "HTTP 404: https://leveret.com/api/t/" + name
 	}
 
-	return {
+	throw {
 		embed: {
 			title: cropToRight(target.hops.map((ali) => "%t " + ali).join(" -> "), 256),
 			fields: "body" in target
@@ -51,4 +48,4 @@ msg.reply((() => {
 				: [],
 		},
 	}
-})())
+})

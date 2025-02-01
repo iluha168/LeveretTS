@@ -1,3 +1,10 @@
 import type {} from "../typings/tagEvalContext.d.ts"
+import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
-msg.reply(Math.floor(Math.random() * 256).toString(2).padStart(8, "0"))
+throwReply(() => {
+	parseArgsParams([], [], "Beep boop. Says a random byte in binary.")
+	throw Math.floor(Math.random() * 256)
+		.toString(2)
+		.padStart(8, "0")
+})

@@ -17,7 +17,11 @@ try {
 			.match(/%t\s+(?<a>.*?)(?:\s|$)|`%t\s+(?<b>[^]*?)`/)
 			?.groups ?? {},
 	)
-	const prepend = parseArgsParams([], ["arguments", "to", "prepend", "..."])
+	const prepend = parseArgsParams(
+		[],
+		["arguments", "to", "prepend", "..."],
+		"Executes the command mentioned in a previous or replied to message.",
+	)
 	const args = prepend.concat((match ?? target.content).split(" "))
 
 	throw util.executeTag(args.shift()!, ...args)
