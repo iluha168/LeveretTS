@@ -1,18 +1,16 @@
 import type {} from "../typings/tagEvalContext.d.ts"
+import { checkGuild } from "./lib/checkGuild.mts"
+import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
-msg.reply((() => {
-	const filter = tag.args
-	if (!filter) {
-		return "❌ No search filter specified"
-	}
-	if (!util.findUsers) {
-		return "❌ This only works in a guild"
-	}
+throwReply(() => {
+	checkGuild(util)
+	const filter = parseArgsParams(["mention or ID"], ["..."], "Finds guild members mentioned.").join(" ")
 	const users = util.findUsers(filter).slice(0, 25)
 	if (!users.length) {
-		return "⚠️ No users match the filter"
+		throw "⚠️ No users match the filter"
 	}
-	return {
+	throw {
 		embed: {
 			description: "✔️ **Found the following users:**\n",
 			fields: users.map((u) => ({
@@ -21,4 +19,4 @@ msg.reply((() => {
 			})),
 		},
 	}
-})())
+})

@@ -1,5 +1,11 @@
 import type {} from "../typings/tagEvalContext.d.ts"
+import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
-const all = util.dumpTags()
-const chosen = all[Math.floor(Math.random() * all.length)]
-msg.reply(`${util.executeTag(chosen, tag.args ?? "")}`)
+throwReply(() => {
+	parseArgsParams([], [], "Executes a random tag.")
+
+	const all = util.dumpTags()
+	const chosen = all[Math.floor(Math.random() * all.length)]
+	throw util.executeTag(chosen, tag.args ?? "")
+})

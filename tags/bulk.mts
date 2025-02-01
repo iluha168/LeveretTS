@@ -1,13 +1,20 @@
 import { EvalContext } from "../typings/leveret.d.ts"
 import type {} from "../typings/tagEvalContext.d.ts"
 import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
-try {
+throwReply(() => {
 	let separator = "\n"
 
-	const args = parseArgsParams(["tag name", "tag name"], ["..."], {}, [
-		[/^--sep=([^]*)$/, (it) => separator = it],
-	])
+	const args = parseArgsParams(
+		["tag name", "tag name"],
+		["..."],
+		"Executes a lot of tags at once. The results are contatenated with a configurable separator. Does not support embeds!",
+		{},
+		[
+			[/^--sep=([^]*)$/, (it) => separator = it, "--sep=separator"],
+		],
+	)
 
 	const chunks: string[] = []
 
@@ -58,6 +65,4 @@ try {
 	}
 
 	msg.reply(chunks.join(separator))
-} catch (e) {
-	msg.reply(`${e}`)
-}
+})

@@ -1,9 +1,11 @@
 import type { Hops, Tag } from "../typings/leveret.d.ts"
 import type {} from "../typings/tagEvalContext.d.ts"
 import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
 type Predicate = (body: string) => unknown
-;(() => {
+
+throwReply(() => {
 	let matcher: string | RegExp
 	const predicateLink: Predicate = (body) => !body.match(/^https?:\/{2}[^ ]+$/)
 	const predicateCode: Predicate = (body) => !body.match(/^`{3}(?:js)?\s+[^]*`{3}$/)
@@ -14,15 +16,11 @@ type Predicate = (body: string) => unknown
 	])
 	let filterAsRegEx = false
 
-	try {
-		matcher = parseArgsParams(["filter"], [], {
-			"--with-links": () => predicates.delete(predicateLink),
-			"--with-code": () => predicates.delete(predicateCode),
-			"--regex": () => filterAsRegEx = true,
-		}).join(" ")
-	} catch (e) {
-		return msg.reply(e as string)
-	}
+	matcher = parseArgsParams(["filter"], ["..."], "Searches for the given string in all tags' content.", {
+		"--with-links": () => predicates.delete(predicateLink),
+		"--with-code": () => predicates.delete(predicateCode),
+		"--regex": () => filterAsRegEx = true,
+	}).join(" ")
 
 	if (filterAsRegEx) {
 		matcher = new RegExp(matcher, "u")
@@ -45,7 +43,7 @@ type Predicate = (body: string) => unknown
 			Array.from(predicates).every((p) => p(tag.body))
 		) as (Tag & Hops)[]
 
-	msg.reply({
+	throw {
 		embed: {
 			title: "%t||ags|| lookup",
 			description: results
@@ -63,5 +61,5 @@ type Predicate = (body: string) => unknown
 				text: `Found a total of ${results.length} tags that match.`,
 			},
 		},
-	})
-})()
+	}
+})

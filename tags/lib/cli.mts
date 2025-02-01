@@ -5,23 +5,31 @@ const fmtWithBrackets = (array: string[], bracketA: string, bracketB: string) =>
 	array.map(i => bracketA + i + bracketB).join(" ")
 
 /**
- * Parses command options and return what's left
+ * @param argsRequired Descriptions of required arguments
+ * @param argsOptional Descriptions of optional arguments
+ * @param description Description of the command
+ * @param options Options before arguments and their callbacks
+ * @param regexOptions Regex patterns for options before arguments, their descriptions and callbacks
+ * @returns Required arguments followed by optional arguments
  */
 export function parseArgsParams(
 	argsRequired: string[],
 	argsOptional: string[],
+	description: string,
 	options: Record<string, () => void> = {},
-	regexOptions: [RegExp, (group: string) => void][] = [],
+	regexOptions: [RegExp, (group: string) => void, string][] = [],
 ): string[] {
 	const help = () => {
 		// deno-fmt-ignore
 		throw `%t ${tag.name} ${
-			fmtWithBrackets(Object.keys(options),'[',']')
+			fmtWithBrackets(Object.keys(options), '[', ']')
+		} ${
+			fmtWithBrackets(regexOptions.map(i => i[2]), '[', ']')
 		} ${
 			fmtWithBrackets(argsRequired, '<', '>')
 		} ${
 			fmtWithBrackets(argsOptional, '(', ')')
-		}`
+		}\n\n${description}`
 	}
 	options["--help"] = help
 
@@ -48,7 +56,10 @@ export function parseArgsParams(
 		}
 		break
 	}
-	if (args.length < argsRequired.length) {
+	if (
+		args.length < argsRequired.length ||
+		(argsOptional.length === 0 && args.length > argsRequired.length)
+	) {
 		help()
 	}
 	return args

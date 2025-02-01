@@ -1,9 +1,10 @@
 import type {} from "../typings/tagEvalContext.d.ts"
+import { parseArgsParams } from "./lib/cli.mts"
+import { throwReply } from "./lib/throwReply.mts"
 
-let refs = 0
-
-export const inspect = (what: unknown) =>
-	JSON.stringify(
+export const inspect = (what: unknown) => {
+	let refs = 0
+	return JSON.stringify(
 		what,
 		(_, v) => {
 			if (v === what && refs++) return
@@ -17,5 +18,9 @@ export const inspect = (what: unknown) =>
 		},
 		4,
 	)
+}
 
-msg.reply(inspect(eval(tag.args ?? "globalThis")))
+throwReply(() => {
+	const args = parseArgsParams([], ["code"], "Evaluates JS code and returns JSON interpretation of the result.")
+	throw inspect(eval(args.join(" ") ?? "globalThis"))
+})
