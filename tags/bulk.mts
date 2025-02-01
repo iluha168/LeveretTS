@@ -51,7 +51,7 @@ throwReply(() => {
 					),
 					tag: {
 						...fetched,
-						args: tag.args,
+						args: undefined,
 					},
 				} satisfies EvalContext,
 				match[2],
@@ -64,5 +64,5 @@ throwReply(() => {
 		}
 	}
 
-	msg.reply(chunks.join(separator))
+	throw chunks.join(separator)
 })
