@@ -24,8 +24,9 @@ try {
 	)
 	const args = prepend.concat((match ?? target.content).split(" "))
 
-	if(args[0] === tag.name)
-		throw Array(5).fill(tag.name).join(", ")+"... The most epic recursion error ever!"
+	if (args[0] === tag.name) {
+		throw Array(5).fill(tag.name).join(", ") + "... The most epic recursion error ever!"
+	}
 
 	throw util.executeTag(args.shift()!, ...args)
 } catch (e) {
