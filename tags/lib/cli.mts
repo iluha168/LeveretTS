@@ -19,9 +19,9 @@ export function parseArgsParams(
 	options: Record<string, () => void> = {},
 	regexOptions: [RegExp, (group: string) => void, string][] = [],
 ): string[] {
-	const help = () => {
+	const help = (prefix = "") => {
 		// deno-fmt-ignore
-		throw `%t ${tag.name} ${
+		throw `${prefix}%t ${tag.name} ${
 			fmtWithBrackets(Object.keys(options), '[', ']')
 		} ${
 			fmtWithBrackets(regexOptions.map(i => i[2]), '[', ']')
@@ -41,6 +41,11 @@ export function parseArgsParams(
 			break
 		}
 
+		if (arg === "--") {
+			args.shift()
+			break
+		}
+
 		if (arg in options) {
 			options[arg]()
 			continue
@@ -56,11 +61,11 @@ export function parseArgsParams(
 		}
 		break
 	}
-	if (
-		args.length < argsRequired.length ||
-		(argsOptional.length === 0 && args.length > argsRequired.length)
-	) {
-		help()
+	if (args.length < argsRequired.length) {
+		help("Not enough params!\n\n")
+	}
+	if (argsOptional.length === 0 && args.length > argsRequired.length) {
+		help("Too many params!\n\n")
 	}
 	return args
 }
