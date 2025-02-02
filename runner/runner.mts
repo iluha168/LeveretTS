@@ -103,7 +103,7 @@ export const defaultUtil: Util = {
 	},
 	fetchMessages() {
 		return [defaultMsg]
-	}
+	},
 }
 
 if (import.meta.main) {
