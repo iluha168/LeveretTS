@@ -1,5 +1,5 @@
 import { UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
-import type { Embed, EvalContext, Message, Util } from "../typings/leveret.d.ts"
+import type { Embed, EvalContext, Http, Message, Util } from "../typings/leveret.d.ts"
 import { tags } from "./dbReader.mts"
 
 export const defaultMsg: Message = {
@@ -97,12 +97,20 @@ export const defaultUtil: Util = {
 					...tag,
 					args: args.join(" "),
 				},
+				http: defaultHttp,
 			} satisfies EvalContext,
 			match[2],
 		)
 	},
 	fetchMessages() {
 		return [defaultMsg]
+	},
+}
+
+export const defaultHttp: Http = {
+	request(req) {
+		console.debug(req)
+		return { headers: {}, status: 200, statusText: "OK", data: null }
 	},
 }
 
@@ -124,6 +132,7 @@ if (import.meta.main) {
 				body: Deno.readTextFileSync(tagSource),
 				args: Deno.args.slice(1).join(" ") || undefined,
 			},
+			http: defaultHttp,
 		} satisfies EvalContext,
 	)
 	import("../" + tagSource)

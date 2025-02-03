@@ -97,8 +97,29 @@ export type Util = {
 	fetchMessages(id?: Snowflake): Message[]
 }
 
+export type HttpRequest = {
+	url: string
+	method?: string
+	headers?: Record<string, string>
+	params?: URLSearchParams | Record<string, number | string | null | undefined>
+	data?: FormData | File | Blob | string | ArrayBuffer | ArrayBufferView | URLSearchParams
+	timeout?: number
+	withCredentials?: boolean
+	responseType?: "blob" | "arraybuffer" | "document" | "json" | "text" | "stream"
+}
+export type HttpResponse = {
+	status: number
+	statusText: string
+	headers: Record<string, string>
+	data: unknown
+}
+export type Http = {
+	request(req: string | HttpRequest): HttpResponse
+}
+
 export type EvalContext = {
 	msg: Message
 	tag: Tag
 	util: Util
+	http: Http
 }

@@ -5,7 +5,7 @@
 
 import { RESTDeleteAPIChannelMessageResult, RESTPostAPIChannelMessageJSONBody, RESTPostAPIChannelMessageResult } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 import { delay } from "jsr:@std/async/delay"
-import { api, LEVERET_ID_CHANNEL, RESTPostAPIChannelAttachmentJSONBody, uploadFile } from "./discordCommons.mts"
+import { api, LEVERET_ID_CHANNEL, uploadFile } from "./discordCommons.mts"
 
 const TAG_NAME = Deno.args[0]
 if (!TAG_NAME) {
