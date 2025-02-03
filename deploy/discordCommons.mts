@@ -5,7 +5,6 @@
 
 import "jsr:@std/dotenv/load"
 import { Snowflake } from "../typings/leveret.d.ts"
-import { RESTAPIAttachment } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 
 const TOKEN = Deno.env.get("USER_TOKEN")!
 if (!TOKEN) {
