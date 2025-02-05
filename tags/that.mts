@@ -12,17 +12,20 @@ try {
 	}
 	target.content = target.content.toLowerCase()
 
-	const [match] = Object.values(
-		target.content
-			.match(/%t\s+(?<a>.*?)(?:\s|$)|`%t\s+(?<b>[^]*?)`/)
-			?.groups ?? {},
-	)
+	const [match] = Object
+		.values(
+			target.content
+				.match(/%t\s+(?<a>.*?)(?:\s|$)|`(?:%t\s+)?(?<b>[^]*?)`|[*]+(?:%t\s+)?(?<c>[^]*?)[*]+/)
+				?.groups ?? {},
+		)
+		.filter((m) => m)
+		.concat([target.content])
 	const prepend = parseArgsParams(
 		[],
 		["arguments", "to", "prepend", "..."],
 		"Executes the command mentioned in a previous or replied to message.",
 	)
-	const args = prepend.concat((match ?? target.content).split(" "))
+	const args = prepend.concat(match.split(" "))
 
 	if (args[0] === tag.name) {
 		throw Array(5).fill(tag.name).join(", ") + "... The most epic recursion error ever!"
