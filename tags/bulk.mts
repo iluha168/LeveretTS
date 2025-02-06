@@ -1,6 +1,6 @@
-import { EvalContext } from "../typings/leveret.d.ts"
 import type {} from "../typings/tagEvalContext.d.ts"
 import { parseArgsParams } from "./lib/cli.mts"
+import { evalTag } from "./lib/evalTag.mts"
 import { throwReply } from "./lib/throwReply.mts"
 
 throwReply(() => {
@@ -21,43 +21,18 @@ throwReply(() => {
 	for (const name of args) {
 		try {
 			const fetched = util.fetchTag(name)
-			if (!fetched || !("body" in fetched)) {
+			if (!fetched) {
+				throw 0
+			}
+			if (!("body" in fetched)) {
 				chunks.push(`\`%t ${name} does not have text.\``)
 				continue
 			}
 
-			const match = fetched.body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)
-			if (!match?.[2]) {
-				chunks.push(fetched.body)
-				continue
-			}
-
-			let hasNotUsed = true
-			const result = new Function(
-				"code",
-				`with(this){return (()=>{"use strict";return eval(code)})()}`,
-			).call(
-				{
-					util, http,
-					msg: Object.assign(
-						Object.create(null),
-						msg,
-						{
-							reply: (...args: unknown[]) => {
-								chunks.push(`${args.join(" ")}`)
-								hasNotUsed = false
-							},
-						},
-					),
-					tag: {
-						...fetched,
-						args: undefined,
-					},
-				} satisfies EvalContext,
-				match[2],
-			)
-			if (hasNotUsed) {
-				chunks.push(`${result}`)
+			try {
+				chunks.push(`${evalTag(fetched)}`)
+			} catch (e) {
+				chunks.push(`${e}`)
 			}
 		} catch {
 			chunks.push(`\`%t ${name} does not exist.\``)
