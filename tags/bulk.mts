@@ -38,7 +38,7 @@ throwReply(() => {
 				`with(this){return (()=>{"use strict";return eval(code)})()}`,
 			).call(
 				{
-					util,
+					util, http,
 					msg: Object.assign(
 						Object.create(null),
 						msg,
