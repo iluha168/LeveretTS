@@ -9,7 +9,11 @@ export function throwReply(body: () => unknown) {
 		if (e instanceof Error) {
 			throw e
 		}
-		// @ts-ignore filtered out actual errors
-		msg.reply(e)
+		if (Array.isArray(e)) {
+			// @ts-ignore Leveret will handle
+			return msg.reply(...e)
+		}
+		// @ts-ignore Leveret will handle
+		return msg.reply(e)
 	}
 }
