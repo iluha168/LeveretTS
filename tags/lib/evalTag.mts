@@ -29,7 +29,7 @@ export const evalTag = (tag: Tag & Hops, args?: string) => {
 			),
 			tag: {
 				...tag,
-				args,
+				args: args ?? tag.args,
 			},
 		} satisfies EvalContext,
 		code,
