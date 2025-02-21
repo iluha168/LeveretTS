@@ -1,11 +1,12 @@
 import type {} from "../typings/tagEvalContext.d.ts"
 import { parseArgsParams } from "./lib/cli.mts"
+import { evalTag } from "./lib/evalTag.mts"
 import { throwReply } from "./lib/throwReply.mts"
 
 const codeSep = "`".repeat(3)
 function cropBody(body: string) {
 	// Leveret limitation
-	let result = body.split("\n").slice(0, 25).join("\n").replaceAll("`", "`")
+	let result = body.split("\n").slice(0, 20).join("\n").replaceAll("`", "`")
 	const isCode = body.startsWith(codeSep) && body.endsWith(codeSep)
 	if (isCode) {
 		result = codeSep + result.slice(codeSep.length, -codeSep.length) + codeSep
@@ -44,7 +45,14 @@ throwReply(() => {
 				}, {
 					name: "Preview",
 					value: showPreview ? cropBody(target.body) : "`Omit by flag.`",
-				}]
+				}].concat(
+					target.body.includes("--help")
+						? [{
+							name: `%t ${target.name} --help`,
+							value: `${evalTag(target, "--help")}`,
+						}]
+						: [],
+				)
 				: [],
 		},
 	}
