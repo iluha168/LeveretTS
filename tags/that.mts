@@ -2,6 +2,15 @@ import type {} from "../typings/tagEvalContext.d.ts"
 import { parseArgsParams } from "./lib/cli.mts"
 
 try {
+	let skipDefaultTagNameCheck = false
+	const prepend = parseArgsParams(
+		[],
+		["arguments", "to", "prepend", "..."],
+		"Executes the command mentioned in a previous or replied to message.",
+		{
+			"-f": () => skipDefaultTagNameCheck = true
+		}
+	)
 	const history = util.fetchMessages()
 
 	const ref = msg.reference?.messageId
@@ -19,12 +28,12 @@ try {
 				?.groups ?? {},
 		)
 		.filter((m) => m)
-		.concat([target.content])
-	const prepend = parseArgsParams(
-		[],
-		["arguments", "to", "prepend", "..."],
-		"Executes the command mentioned in a previous or replied to message.",
-	)
+		// The default value
+		.concat(skipDefaultTagNameCheck? [target.content] : target.content.match(/[a-z0-9-_]+/)!)
+	if(!match) {
+		throw "❌ Could not find a valid tag name. Try `%t that -f`!"
+	}
+
 	const args = prepend.concat(match.split(" "))
 
 	if (args[0] === tag.name) {
