@@ -29,7 +29,7 @@ export function parseArgsParams(
 			fmtWithBrackets(argsRequired, '<', '>')
 		} ${
 			fmtWithBrackets(argsOptional, '(', ')')
-		}\n\n${description}`
+		}\n\n${description}\n[Source code.](<https://github.com/iluha168/LeveretTS/blob/main/tags/${tag.name}.mts>)`
 	}
 	options["--help"] = help
 
