@@ -19,9 +19,8 @@ try {
 	if (!target) {
 		throw "❌ `Could not fetch the target message.`"
 	}
-	target.content = target.content.toLowerCase()
 
-	const [match] = Object
+	const [match] = skipDefaultTagNameCheck ? [target.content] : Object
 		.values(
 			target.content
 				.match(/%t\s+(?<a>.*?)(?:\s|$)|`(?:%t\s+)?(?<b>[^]*?)`|[*]+(?:%t\s+)?(?<c>[^]*?)[*]+/)
@@ -29,7 +28,7 @@ try {
 		)
 		.filter((m) => m)
 		// The default value
-		.concat(skipDefaultTagNameCheck ? [target.content] : target.content.match(/[a-z0-9-_]+/)!)
+		.concat(target.content.toLowerCase().match(/[a-z0-9-_]+/)!)
 	if (!match) {
 		throw "❌ Could not find a valid tag name. Try `%t that -f`!"
 	}
