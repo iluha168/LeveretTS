@@ -60,13 +60,14 @@ export const defaultUtil: Util = {
 				break
 			}
 
-			const { alias } = tag
+			const { alias, args } = tag
 			if (hops.includes(alias)) {
 				const chain = hops.concat([alias]).map((n) => `**${n}**`).join(" -> ")
 				throw new Error(`Epic recursion error: ${chain}.`)
 			}
 			hops.push(alias)
 			tag = tags.get(alias)
+			if (tag) tag.args ??= args
 		}
 		return structuredClone(Object.assign(
 			Object.create(null),

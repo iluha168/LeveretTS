@@ -5,11 +5,12 @@ import { evalCode } from "./evaluation.mts"
 export const runServer = (listenAt: string) => {
 	rmSync(listenAt)
 	createServer((socket) => {
-		let code = ""
+		let packet = ""
 		socket.on("data", async (data) => {
-			code += data.toString("utf8")
-			if (data.at(-1)) return
-			const output = await evalCode(code.slice(0, -1))
+			packet += data.toString("utf8")
+			const [code, tagJSON, empty] = packet.split("\0")
+			if (empty === undefined) return
+			const output = await evalCode(code, tagJSON ? JSON.parse(tagJSON) : undefined)
 			socket.write(JSON.stringify(output) + "\0", "utf8")
 		})
 	}).listen(listenAt)

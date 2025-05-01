@@ -1,27 +1,33 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsParser } from "discordeno"
 import { register } from "../registry.mts"
-import { executeTag } from "./executeTag.mts"
+import { evalCode } from "../tag/engineInstance.mts"
 
 register(
 	{
-		name: "tag",
-		description: "Fetch a tag",
+		name: "eval",
+		description: "Evaluates JavaScript",
 		type: ApplicationCommandTypes.ChatInput,
 		options: [{
-			name: "name",
+			name: "code",
 			type: ApplicationCommandOptionTypes.String,
-			description: "Tag's name",
+			description: "JavaScript",
 			required: true,
 		}, {
 			name: "args",
 			type: ApplicationCommandOptionTypes.String,
-			description: "Arguments you might want to pass to the tag",
+			description: "This string will be available in your code under the name `tag.args`",
 			required: false,
 		}],
 	},
 	async (interaction) => {
-		const { name, args } = commandOptionsParser(interaction) as { name: string; args?: string }
-		const res = await executeTag(name, args)
+		const { code, args } = commandOptionsParser(interaction) as { code: string; args?: string }
+		const res = await evalCode(code, {
+			body: code,
+			hops: [""],
+			name: "",
+			owner: `${interaction.user.id}`,
+			args,
+		})
 		if (res !== undefined) {
 			await interaction.respond(`${res}`)
 		}

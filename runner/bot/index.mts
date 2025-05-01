@@ -3,6 +3,7 @@ import { createBot } from "discordeno"
 
 import { bakeDescriptions, interactionCreateHandler } from "./commands/registry.mts"
 import {} from "./commands/tag/handler.mts"
+import {} from "./commands/eval/handler.mts"
 
 export const bot = createBot({
 	events: {
