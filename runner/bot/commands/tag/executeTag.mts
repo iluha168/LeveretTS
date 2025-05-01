@@ -1,7 +1,7 @@
 import { defaultUtil } from "../../../runner.mts"
 import { evalCode } from "./engineInstance.mts"
 
-export const executeTag = async (name: string) => {
+export const executeTag = async (name: string, args?: string) => {
 	let tag
 	try {
 		tag = defaultUtil.fetchTag(name)
@@ -16,9 +16,6 @@ export const executeTag = async (name: string) => {
 	}
 	const match = tag.body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)
 	if (!match?.[2]) return tag.body
-	try {
-		return await evalCode(match[2])
-	} catch (e) {
-		return `${e}`
-	}
+	if (args) tag.args = args
+	return await evalCode(match[2], tag)
 }

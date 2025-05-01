@@ -27,6 +27,7 @@ for (
 		import.meta.resolve("./db.txt").slice("file://".length),
 	).split("\n")
 ) {
+	if (!entry) continue
 	const [name, data] = entry.split("\t")
 	try {
 		tags.set(name, dbEntrySchema.parse(JSON.parse(data)))

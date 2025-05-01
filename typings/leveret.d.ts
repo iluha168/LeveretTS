@@ -2,7 +2,7 @@ import type { APIEmbed, UserFlags } from "https://deno.land/x/discord_api_types@
 
 export type Maybe<T> = T | Record<keyof T, null>
 
-export type Snowflake = `${number}`
+export type Snowflake = `${number | bigint}`
 export type Timestamp = number
 export type Embed = { embed: APIEmbed }
 export type User =
