@@ -1,0 +1,5 @@
+{
+    "imports": {
+        "discordeno": "npm:discordeno@21.0.0"
+    }
+}
