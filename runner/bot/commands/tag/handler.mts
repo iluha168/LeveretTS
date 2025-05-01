@@ -1,5 +1,6 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsParser } from "discordeno"
 import { register } from "../registry.mts"
+import { executeTag } from "./executeTag.mts"
 
 register(
 	{
@@ -15,6 +16,9 @@ register(
 	},
 	async (interaction) => {
 		const { name } = commandOptionsParser(interaction) as { name: string }
-		// TODO
+		const res = await executeTag(name)
+		if (res !== undefined) {
+			await interaction.respond(`${res}`)
+		}
 	},
 )

@@ -2,6 +2,8 @@ dist/
 node_modules/
 
 .env
+# Unix domain socket
+*.uds
 
 # Fill the database with your example tags
 runner/db.txt
