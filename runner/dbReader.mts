@@ -3,6 +3,7 @@ import z from "https://deno.land/x/zod@v3.24.1/mod.ts"
 const dbEntrySchema = z.intersection(
 	z.object({
 		owner: z.string().refine((s) => s.match(/^\d+$/)),
+		args: z.string().optional(),
 	}),
 	z.union([
 		z.object({
