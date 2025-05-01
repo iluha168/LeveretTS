@@ -14,11 +14,12 @@ msg.reply(
 			let owner: string = "0"
 			let alias: string | null = null
 			let body: string = ""
+			let args: string | undefined
 			try {
 				const tag = util.fetchTag(name)!
 				if ("body" in tag) {
-					body = tag.body
-					owner = tag.owner
+					;({ body, owner, args } = tag)
+					args ||= undefined
 				}
 				if (tag.hops.length > 1) {
 					alias = tag.hops[1]
@@ -29,7 +30,7 @@ msg.reply(
 					.map((m) => m[1])
 			}
 			return name + "\t" + JSON.stringify(
-				(alias ? { owner, alias } : { owner, body }) satisfies dbEntry,
+				(alias ? { owner, alias, args } : { owner, body, args }) satisfies dbEntry,
 			)
 		})
 		.join("\n") + "\n",
