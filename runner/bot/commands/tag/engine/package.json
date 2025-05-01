@@ -1,0 +1,9 @@
+{
+	"dependencies": {
+		"isolated-vm": "^5.0.4"
+	},
+	"type": "module",
+	"devDependencies": {
+		"@types/node": "^22.15.3"
+	}
+}
