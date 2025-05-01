@@ -1,0 +1,14 @@
+{
+    "folders": [
+        {
+            "path": "../",
+            "name": "Root"
+        },{
+            "path": "../runner/bot",
+            "name": "Discord bot"
+        },{
+            "path": "../runner/bot/commands/tag/engine",
+            "name": "Eval sandbox"
+        }
+    ]
+}
