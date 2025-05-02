@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsParser } from "discordeno"
 import { register } from "../registry.mts"
 import { evalCode } from "../tag/engineInstance.mts"
+import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
 
 register(
 	{
@@ -29,6 +30,10 @@ register(
 				name: "",
 				owner: `${interaction.user.id}`,
 				args,
+			},
+			msg: {
+				...DiscordInteractionToLeveretMessage(interaction),
+				content: `%eval \`\`\`js\n${code}\`\`\``,
 			},
 		})
 		if (res !== undefined) {

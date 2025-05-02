@@ -1,7 +1,8 @@
+import { Message } from "../../../../typings/leveret.d.ts"
 import { defaultUtil } from "../../../runner.mts"
 import { evalCode } from "./engineInstance.mts"
 
-export const executeTag = async (name: string, args?: string) => {
+export const executeTag = async (name: string, msg: Omit<Message, "reply">, args?: string) => {
 	let tag
 	try {
 		tag = defaultUtil.fetchTag(name)
@@ -20,5 +21,6 @@ export const executeTag = async (name: string, args?: string) => {
 	return await evalCode({
 		code: match[2],
 		tag,
+		msg,
 	})
 }
