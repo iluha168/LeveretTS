@@ -8,9 +8,8 @@ export const runServer = (listenAt: string) => {
 		let packet = ""
 		socket.on("data", async (data) => {
 			packet += data.toString("utf8")
-			const [code, tagJSON, empty] = packet.split("\0")
-			if (empty === undefined) return
-			const output = await evalCode(code, tagJSON ? JSON.parse(tagJSON) : undefined)
+			if (packet.charCodeAt(-1)) return
+			const output = await evalCode(JSON.parse(packet.slice(0, -1)))
 			socket.write(JSON.stringify(output) + "\0", "utf8")
 		})
 	}).listen(listenAt)

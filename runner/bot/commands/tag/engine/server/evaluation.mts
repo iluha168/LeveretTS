@@ -1,10 +1,10 @@
 import ivm from "isolated-vm"
-import type { Hops, Tag } from "../../../../../../typings/leveret.d.ts"
+import type { CodeEvalProps } from "../../CodeEvalProps.mts"
 import { assignCallers } from "../tools/callers.mts"
 
 const nullObj = new ivm.ExternalCopy(Object.create(null))
 
-export const evalCode = async (code: string, tag?: Tag & Hops) => {
+export const evalCode = async ({ code, tag }: CodeEvalProps) => {
 	const isolate = new ivm.Isolate({ memoryLimit: 64 })
 	const context = await isolate.createContext()
 

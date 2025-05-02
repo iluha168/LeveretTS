@@ -17,5 +17,8 @@ export const executeTag = async (name: string, args?: string) => {
 	const match = tag.body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)
 	if (!match?.[2]) return tag.body
 	if (args) tag.args = args
-	return await evalCode(match[2], tag)
+	return await evalCode({
+		code: match[2],
+		tag,
+	})
 }

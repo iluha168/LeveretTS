@@ -21,12 +21,15 @@ register(
 	},
 	async (interaction) => {
 		const { code, args } = commandOptionsParser(interaction) as { code: string; args?: string }
-		const res = await evalCode(code, {
-			body: code,
-			hops: [""],
-			name: "",
-			owner: `${interaction.user.id}`,
-			args,
+		const res = await evalCode({
+			code,
+			tag: {
+				body: code,
+				hops: [""],
+				name: "",
+				owner: `${interaction.user.id}`,
+				args,
+			},
 		})
 		if (res !== undefined) {
 			await interaction.respond(`${res}`)
