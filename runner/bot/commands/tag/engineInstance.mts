@@ -1,5 +1,5 @@
 import { fromFileUrl } from "jsr:@std/path/from-file-url"
-import { Hops, Tag } from "../../../../typings/leveret.d.ts"
+import { CodeEvalProps } from "./CodeEvalProps.mts"
 import {} from "./toolsProvider.mts"
 
 const f = (path: string) => fromFileUrl(import.meta.resolve(path))
@@ -16,10 +16,10 @@ const sandboxPath = {
 	path: f("./engine/sandbox.uds"),
 } satisfies Deno.UnixAddr
 
-export const evalCode = async (code: string, tag?: Tag & Hops) => {
+export const evalCode = async (props: CodeEvalProps) => {
 	const sock = await Deno.connect(sandboxPath)
 	const toWrite = new TextEncoder().encode(
-		code + "\0" + (tag ? JSON.stringify(tag) : "") + "\0",
+		JSON.stringify(props) + "\0",
 	)
 	for (
 		let written = 0;
