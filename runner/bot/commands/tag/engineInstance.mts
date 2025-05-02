@@ -9,7 +9,7 @@ new Deno.Command(f("./engine/launch.sh"), {
 	stdin: "null",
 	stderr: "inherit",
 	stdout: "inherit",
-}).spawn()
+}).spawn().unref()
 
 const sandboxPath = {
 	transport: "unix",
