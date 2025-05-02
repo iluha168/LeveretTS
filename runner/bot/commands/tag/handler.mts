@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsParser } from "discordeno"
 import { register } from "../registry.mts"
 import { executeTag } from "./executeTag.mts"
+import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
 
 register(
 	{
@@ -21,7 +22,14 @@ register(
 	},
 	async (interaction) => {
 		const { name, args } = commandOptionsParser(interaction) as { name: string; args?: string }
-		const res = await executeTag(name, args)
+		const res = await executeTag(
+			name,
+			{
+				...DiscordInteractionToLeveretMessage(interaction),
+				content: "%t " + name + (args ? ` ${args}` : ""),
+			},
+			args,
+		)
 		if (res !== undefined) {
 			await interaction.respond(`${res}`)
 		}

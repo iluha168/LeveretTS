@@ -4,18 +4,20 @@ import { assignCallers } from "../tools/callers.mts"
 
 const nullObj = new ivm.ExternalCopy(Object.create(null))
 
-export const evalCode = async ({ code, tag }: CodeEvalProps) => {
+export const evalCode = async ({ code, tag, msg }: CodeEvalProps) => {
 	const isolate = new ivm.Isolate({ memoryLimit: 64 })
 	const context = await isolate.createContext()
 
 	const jail = context.global
 	await jail.set("globalThis", jail.derefInto())
-	await jail.set("util", nullObj.copyInto())
 
-	const util = await jail.get("util")
+	await Promise.all([
+		jail.set("util", nullObj.copyInto()),
+		jail.set("tag", new ivm.ExternalCopy(tag).copyInto()),
+		jail.set("msg", new ivm.ExternalCopy(msg).copyInto()),
+	])
+
 	await assignCallers(context)
-
-	await jail.set("tag", new ivm.ExternalCopy(tag).copyInto())
 
 	const script = await isolate.compileScript(code)
 	try {
