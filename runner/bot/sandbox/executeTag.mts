@@ -1,5 +1,5 @@
-import { Message } from "../../../../typings/leveret.d.ts"
-import { defaultUtil } from "../../../runner.mts"
+import { Message } from "../../../typings/leveret.d.ts"
+import { defaultUtil } from "../../runner.mts"
 import { evalCode } from "./engineInstance.mts"
 
 export const executeTag = async (name: string, msg: Omit<Message, "reply">, args?: string): ReturnType<typeof evalCode> => {

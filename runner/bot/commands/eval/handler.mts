@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsParser } from "discordeno"
 import { register } from "../registry.mts"
-import { evalCode } from "../tag/engineInstance.mts"
+import { evalCode } from "../../sandbox/engineInstance.mts"
 import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
 import { EvalResultToInteractionResponse } from "../../transformers/EvalResultToInteractionResponse.mts"
 

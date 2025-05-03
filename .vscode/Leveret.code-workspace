@@ -7,7 +7,7 @@
             "path": "../runner/bot",
             "name": "Discord bot"
         },{
-            "path": "../runner/bot/commands/tag/engine",
+            "path": "../runner/bot/sandbox/engine",
             "name": "Eval sandbox"
         }
     ]

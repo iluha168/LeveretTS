@@ -1,4 +1,4 @@
-import { Hops, Message, Tag } from "../../../../typings/leveret.d.ts"
+import { Hops, Message, Tag } from "../../../typings/leveret.d.ts"
 
 export type CodeEvalProps = {
 	code: string
