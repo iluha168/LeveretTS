@@ -23,6 +23,7 @@ register(
 	},
 	async (interaction) => {
 		const { code, args } = commandOptionsParser(interaction) as { code: string; args?: string }
+		const deferTimeout = setTimeout(() => interaction.defer().catch(() => {}), 1000)
 		const res = await evalCode({
 			code,
 			tag: {
@@ -37,6 +38,7 @@ register(
 				content: `%eval \`\`\`js\n${code}\`\`\``,
 			},
 		})
+		clearTimeout(deferTimeout)
 		await EvalResultToInteractionResponse(res, interaction)
 	},
 )
