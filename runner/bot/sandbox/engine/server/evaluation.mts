@@ -38,7 +38,7 @@ export const evalCode = async ({ code, tag, msg }: CodeEvalProps): Promise<Valid
 	}
 	return await scriptOrErr
 		.run(context, {
-			timeout: 10_000,
+			timeout: 2000,
 			copy: true,
 		})
 		.then(JSON.stringify) // may return undefined if passed undefined

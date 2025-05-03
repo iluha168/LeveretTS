@@ -23,6 +23,7 @@ register(
 	},
 	async (interaction) => {
 		const { name, args } = commandOptionsParser(interaction) as { name: string; args?: string }
+		const deferTimeout = setTimeout(() => interaction.defer().catch(() => {}), 1000)
 		const res = await executeTag(
 			name,
 			{
@@ -31,6 +32,7 @@ register(
 			},
 			args,
 		)
+		clearTimeout(deferTimeout)
 		await EvalResultToInteractionResponse(res, interaction)
 	},
 )

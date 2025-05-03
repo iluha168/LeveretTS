@@ -7,7 +7,7 @@ export const EvalResultToInteractionResponse = async (
 	interaction: typeof bot.transformers.$inferredTypes.interaction,
 ) => {
 	if (result === undefined) {
-		await interaction.defer()
+		await interaction.defer().catch(() => {})
 		await interaction.delete()
 		return
 	}
@@ -18,6 +18,9 @@ export const EvalResultToInteractionResponse = async (
 			blob: new Blob([result.content]),
 		}]
 		delete callbackData.content
+	}
+	if (callbackData.files) {
+		await interaction.defer().catch(() => {})
 	}
 	await interaction.respond(callbackData)
 }
