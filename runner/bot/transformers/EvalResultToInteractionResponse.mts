@@ -6,7 +6,7 @@ export const EvalResultToInteractionResponse = async (
 	result: Awaited<ReturnType<typeof evalCode>>,
 	interaction: typeof bot.transformers.$inferredTypes.interaction,
 ) => {
-	if (result === undefined) {
+	if (result == null) {
 		await interaction.defer().catch(() => {})
 		await interaction.delete()
 		return
