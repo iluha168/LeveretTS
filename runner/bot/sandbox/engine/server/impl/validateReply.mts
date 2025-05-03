@@ -24,7 +24,7 @@ const zEmbed: z.ZodType<Embeds, z.ZodTypeDef, LeveretEmbed> = z.strictObject({
 		description: z.string().min(1).max(4096).optional(),
 		url: z.string().url().min(1).max(256).optional(),
 		timestamp: z.string().min(1).max(256).optional(),
-		color: z.string().min(0x000000).max(0xFFFFFF).optional(),
+		color: z.number().min(0x000000).max(0xFFFFFF).optional(),
 		footer: z.strictObject({
 			text: z.string().min(1).max(2048),
 			icon_url: z.string().url().min(1).max(256).optional(),
