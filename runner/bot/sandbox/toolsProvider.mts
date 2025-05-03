@@ -1,6 +1,6 @@
 import { fromFileUrl } from "jsr:@std/path/from-file-url"
 import { Paths } from "./engine/tools/paths.mts"
-import { defaultUtil } from "../../../runner.mts"
+import { defaultUtil } from "../../runner.mts"
 
 const handle = (path: Paths) => {
 	switch (path) {

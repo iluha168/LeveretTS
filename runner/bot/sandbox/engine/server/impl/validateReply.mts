@@ -1,5 +1,5 @@
 import { z } from "zod"
-import type { Embed as RawLeveretEmbed } from "../../../../../../../typings/leveret.d.ts"
+import type { Embed as RawLeveretEmbed } from "../../../../../../typings/leveret.d.ts"
 
 type LeveretEmbed = { embed: Omit<RawLeveretEmbed["embed"], "type"> }
 type Embeds = {
