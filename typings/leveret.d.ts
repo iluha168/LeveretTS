@@ -1,4 +1,4 @@
-import type { APIEmbed, UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
+import type { APIEmbed, UserFlags } from "https://deno.land/x/discord_api_types@0.38.2/v10.ts"
 
 export type Maybe<T> = T | Record<keyof T, null>
 

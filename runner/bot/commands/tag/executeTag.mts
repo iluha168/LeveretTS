@@ -2,7 +2,7 @@ import { Message } from "../../../../typings/leveret.d.ts"
 import { defaultUtil } from "../../../runner.mts"
 import { evalCode } from "./engineInstance.mts"
 
-export const executeTag = async (name: string, msg: Omit<Message, "reply">, args?: string) => {
+export const executeTag = async (name: string, msg: Omit<Message, "reply">, args?: string): ReturnType<typeof evalCode> => {
 	let tag
 	try {
 		tag = defaultUtil.fetchTag(name)
@@ -11,12 +11,12 @@ export const executeTag = async (name: string, msg: Omit<Message, "reply">, args
 		}
 	} catch (e) {
 		if (e instanceof Error) {
-			return e.message
+			return { content: e.message }
 		}
-		return `${e}`
+		return { content: `${e}` }
 	}
 	const match = tag.body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)
-	if (!match?.[2]) return tag.body
+	if (!match?.[2]) return { content: tag.body }
 	if (args) tag.args = args
 	return await evalCode({
 		code: match[2],

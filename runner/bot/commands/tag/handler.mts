@@ -2,6 +2,7 @@ import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsP
 import { register } from "../registry.mts"
 import { executeTag } from "./executeTag.mts"
 import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
+import { EvalResultToInteractionResponse } from "../../transformers/EvalResultToInteractionResponse.mts"
 
 register(
 	{
@@ -30,8 +31,6 @@ register(
 			},
 			args,
 		)
-		if (res !== undefined) {
-			await interaction.respond(`${res}`)
-		}
+		await EvalResultToInteractionResponse(res, interaction)
 	},
 )

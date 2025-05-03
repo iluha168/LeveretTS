@@ -1,6 +1,7 @@
 {
 	"dependencies": {
-		"isolated-vm": "^5.0.4"
+		"isolated-vm": "^5.0.4",
+		"zod": "^3.24.3"
 	},
 	"type": "module",
 	"devDependencies": {

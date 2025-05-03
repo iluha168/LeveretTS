@@ -10,7 +10,7 @@ export const runServer = (listenAt: string) => {
 			packet += data.toString("utf8")
 			if (packet.charCodeAt(-1)) return
 			const output = await evalCode(JSON.parse(packet.slice(0, -1)))
-			socket.write(JSON.stringify(output) + "\0", "utf8")
+			socket.write((output === undefined ? "" : JSON.stringify(output)) + "\0", "utf8")
 		})
 	}).listen(listenAt)
 }

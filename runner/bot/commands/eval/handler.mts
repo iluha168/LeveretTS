@@ -2,6 +2,7 @@ import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsP
 import { register } from "../registry.mts"
 import { evalCode } from "../tag/engineInstance.mts"
 import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
+import { EvalResultToInteractionResponse } from "../../transformers/EvalResultToInteractionResponse.mts"
 
 register(
 	{
@@ -36,8 +37,6 @@ register(
 				content: `%eval \`\`\`js\n${code}\`\`\``,
 			},
 		})
-		if (res !== undefined) {
-			await interaction.respond(`${res}`)
-		}
+		await EvalResultToInteractionResponse(res, interaction)
 	},
 )
