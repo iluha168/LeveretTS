@@ -49,7 +49,7 @@ export const evalCode = ({ code, tag, msg }: CodeEvalProps) =>
 					timeout: 2000,
 					copy: true,
 				})
-				.then(JSON.stringify) // may return undefined if passed undefined
+				.then(res => typeof res === "string" ? res : JSON.stringify(res)) // may return undefined if passed undefined
 				.catch((e) => `⚠️ Error evaluating script.\n\`\`\`js\n${e}\`\`\``)
 		})().then(res).catch(rej)
 	})
