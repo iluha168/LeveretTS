@@ -88,6 +88,7 @@ export type Tag = {
 
 export type Util = {
 	dumpTags(): string[]
+	findTags(name: string): string[]
 	fetchTag(name: string):
 		| (Hops | (Tag & Hops))
 		| null

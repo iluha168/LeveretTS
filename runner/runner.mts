@@ -1,6 +1,7 @@
 import { UserFlags } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 import type { Embed, EvalContext, Http, Message, Util } from "../typings/leveret.d.ts"
 import { tags } from "./dbReader.mts"
+import { levenshteinDistance } from "jsr:@alg/levenshtein"
 
 export const defaultMsg: Message = {
 	id: "420",
@@ -47,6 +48,17 @@ export const defaultMsg: Message = {
 export const defaultUtil: Util = {
 	dumpTags() {
 		return tags.keys().toArray()
+	},
+	findTags(targetName) {
+		const options = { maxCost: 8, deletion: 6, substitution: 4, insertion: 0.1 }
+		return tags
+			.keys()
+			.map((name) => [name, levenshteinDistance(targetName, name, options) as number] as const)
+			.filter(([, distance]) => distance <= 8)
+			.toArray()
+			.sort(([, a], [, b]) => a - b)
+			.splice(0, 50)
+			.map(([name]) => name)
 	},
 	fetchTag(name: string) {
 		const hops = [name]

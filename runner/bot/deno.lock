@@ -1,12 +1,16 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@alg/levenshtein@*": "0.0.1",
     "jsr:@std/dotenv@*": "0.225.3",
     "jsr:@std/path@*": "1.0.8",
     "jsr:@std/streams@*": "1.0.9",
     "npm:discordeno@21.0.0": "21.0.0"
   },
   "jsr": {
+    "@alg/levenshtein@0.0.1": {
+      "integrity": "e7e4e740ddbffa54ce784840ee876267f642ffffcea364dca9d86eb6fc8638e7"
+    },
     "@std/dotenv@0.225.3": {
       "integrity": "a95e5b812c27b0854c52acbae215856d9cce9d4bbf774d938c51d212711e8d4a"
     },
