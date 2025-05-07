@@ -2,10 +2,12 @@ import { fromFileUrl } from "jsr:@std/path/from-file-url"
 import { Paths } from "./engine/tools/paths.mts"
 import { defaultUtil } from "../../runner.mts"
 
-const handle = (path: Paths) => {
+const handle = async (path: Paths, data: Promise<unknown>) => {
 	switch (path) {
 		case Paths.dumpTags:
 			return defaultUtil.dumpTags()
+		case Paths.findTags:
+			return defaultUtil.findTags((await data) as string)
 	}
 	const _check: never = path
 }
@@ -15,8 +17,11 @@ await Deno.remove(path).catch(() => {})
 
 Deno.serve(
 	{ transport: "unix", path },
-	(conn) => {
-		const response = handle(new URL(conn.url).pathname as Paths)
+	async (conn) => {
+		const response = await handle(
+			new URL(conn.url).pathname as Paths,
+			conn.json().catch(() => null),
+		)
 		if (response === undefined) {
 			return new Response(null, { status: 404 })
 		}

@@ -1,5 +1,5 @@
 import ivm from "isolated-vm"
-import { fetchTool } from "./request.mts"
+import { dumpTags, unvalidatedFindTags } from "./request.mts"
 import { Paths } from "./paths.mts"
 
 export const createExternalFnAssigner = (
@@ -14,9 +14,17 @@ export const createExternalFnAssigner = (
 		)
 }
 
-const assignDumpTags = createExternalFnAssigner("util.dumpTags", fetchTool.bind(null, Paths.dumpTags))
+const assignDumpTags = createExternalFnAssigner("util.dumpTags", dumpTags)
+
+const assignFindTags = createExternalFnAssigner("util.findTags", (name?: any) => {
+	if (typeof name !== "string") {
+		throw new Error("No input name specified")
+	}
+	return unvalidatedFindTags(name)
+})
 
 export const assignCallers = (context: ivm.Context) =>
 	Promise.all([
 		assignDumpTags(context),
+		assignFindTags(context),
 	])

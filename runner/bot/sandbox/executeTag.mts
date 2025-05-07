@@ -7,7 +7,19 @@ export const executeTag = async (name: string, msg: Omit<Message, "reply">, args
 	try {
 		tag = defaultUtil.fetchTag(name)
 		if (tag === null || !("body" in tag)) {
-			throw new Error(`⚠️ Tag **${name}** doesn't exist.`)
+			const similarTagNames = defaultUtil.findTags(name)
+			throw new Error(
+				`⚠️ Tag **${name}** doesn't exist.` + (
+					similarTagNames.length > 0
+						? `\nDid you mean: ${
+							similarTagNames
+								.slice(0, 5)
+								.map((n) => `**${n}**`)
+								.join(", ")
+						}?`
+						: ""
+				),
+			)
 		}
 	} catch (e) {
 		if (e instanceof Error) {
