@@ -75,7 +75,7 @@ export const defaultUtil: Util = {
 			const { alias, args } = tag
 			if (hops.includes(alias)) {
 				const chain = hops.concat([alias]).map((n) => `**${n}**`).join(" -> ")
-				throw new Error(`Epic recursion error: ${chain}.`)
+				throw new Error(`⚠️ Epic recursion error: ${chain}.`)
 			}
 			hops.push(alias)
 			tag = tags.get(alias)

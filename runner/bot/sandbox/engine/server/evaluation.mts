@@ -20,6 +20,7 @@ export const evalCode = ({ code, tag, msg }: CodeEvalProps) =>
 			await Promise.all([
 				jail.set("globalThis", jail.derefInto()),
 				jail.set("util", nullObj.copyInto()),
+				jail.set("http", nullObj.copyInto()),
 				jail.set("tag", new ivm.ExternalCopy(tag).copyInto()),
 				jail.set("msg", new ivm.ExternalCopy(msg).copyInto()),
 			])
