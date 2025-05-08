@@ -3,7 +3,9 @@ import { rmSync } from "node:fs"
 import { evalCode } from "./evaluation.mts"
 
 export const runServer = (listenAt: string) => {
-	rmSync(listenAt)
+	try {
+		rmSync(listenAt)
+	} catch {}
 	createServer((socket) => {
 		let packet = ""
 		socket.on("data", async (data) => {
