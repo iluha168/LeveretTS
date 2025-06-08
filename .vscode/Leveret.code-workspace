@@ -9,6 +9,9 @@
         },{
             "path": "../runner/bot/sandbox/engine",
             "name": "Eval sandbox"
+        },{
+            "path": "../ORM",
+            "name": "ORM"
         }
     ]
 }
