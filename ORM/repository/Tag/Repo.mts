@@ -1,6 +1,8 @@
-import { db } from "db"
+import { db } from "../../connection/index.mts"
 import { TagRow, zTagRow } from "./row.mts"
 import type { TagModel } from "./TagModel.mts"
+
+import { distance as levenshtein } from "jsr:@alg/levenshtein@^0.0.4"
 
 /**
  * Cache stores ALL of the tags for now
@@ -27,6 +29,24 @@ export async function save(tagRow: TagRow, affectDB = true) {
 		)
 	}
 	cache.set(tagRow.name, tagModel)
+}
+
+export async function* fetchTagNames(): AsyncGenerator<string> {
+	yield* cache.keys()
+}
+
+const findTagNamesLevenshteinOptions = { maxCost: 8, deletion: 6, substitution: 4, insertion: 0.1 }
+export async function findTagNames(targetName: string): Promise<string[]> {
+	const candidates: [string, number][] = []
+	for await (const name of fetchTagNames()) {
+		const distance: number = levenshtein(targetName, name, findTagNamesLevenshteinOptions)
+		if (distance > 8) continue
+		candidates.push([name, distance] as const)
+	}
+	return candidates
+		.sort(([, a], [, b]) => a - b)
+		.splice(0, 50)
+		.map(([name]) => name)
 }
 
 await db.useConnection(async (conn) => {

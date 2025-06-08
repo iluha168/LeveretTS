@@ -1,13 +1,15 @@
-import { Message } from "../../../typings/leveret.d.ts"
-import { defaultUtil } from "../../runner.mts"
 import { evalCode } from "./engineInstance.mts"
+
+import { Message } from "../../../typings/leveret.d.ts"
+import { fetchTag } from "../util/fetchTag.mts"
+import { findTagNames } from "ORM"
 
 export const executeTag = async (name: string, msg: Omit<Message, "reply">, args?: string): ReturnType<typeof evalCode> => {
 	let tag
 	try {
-		tag = defaultUtil.fetchTag(name)
+		tag = await fetchTag(name)
 		if (tag === null || !("body" in tag)) {
-			const similarTagNames = defaultUtil.findTags(name)
+			const similarTagNames = await findTagNames(name)
 			throw new Error(
 				`⚠️ Tag **${name}** doesn't exist.` + (
 					similarTagNames.length > 0

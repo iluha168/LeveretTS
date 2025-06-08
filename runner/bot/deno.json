@@ -1,6 +1,7 @@
 {
 	"imports": {
-		"discordeno": "npm:discordeno@21.0.0"
+		"discordeno": "npm:discordeno@21.0.0",
+		"ORM": "../../ORM/mod.mts"
 	},
 	"exclude": [
 		"commands/tag/engine/"

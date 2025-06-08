@@ -1,5 +1,5 @@
 import type {} from "../typings/tagEvalContext.d.ts"
-import type { dbEntry } from "../runner/dbReader.mts"
+import type { TagRow } from "../ORM/repository/Tag/row.mts"
 
 if (!tag.args) {
 	throw "Usage: %t megadump 400-1000"
@@ -29,8 +29,15 @@ msg.reply(
 					.matchAll(/\*\*(.*?)\*\*/g))
 					.map((m) => m[1])
 			}
-			return name + "\t" + JSON.stringify(
-				(alias ? { owner, alias, args } : { owner, body, args }) satisfies dbEntry,
+			const code = body.match(/^`{3}([\S]+)?\n([\s\S]+)`{3}$/)?.[2]
+			return JSON.stringify(
+				{
+					owner: BigInt(owner),
+					body: alias ? alias + "\n" + (args ?? "") : code ? code : body,
+					name,
+					type: alias ? "alias" : code ? "js" : "txt",
+				} satisfies TagRow,
+				(_, v) => typeof v === "bigint" ? v.toString() : v,
 			)
 		})
 		.join("\n") + "\n",
