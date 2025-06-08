@@ -1,9 +1,0 @@
-{
-	"imports": {
-		"dotenv": "jsr:@std/dotenv@^0.225.5",
-		"zod-env": "jsr:@keawade/zod-env@^0.1.2",
-		"mysql": "https://deno.land/x/mysql/mod.ts",
-
-		"db": "./connection/index.mts"
-	}
-}

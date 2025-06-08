@@ -18,6 +18,7 @@ import {
 } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 import { api, LEVERET_ID_BOT, LEVERET_ID_CHANNEL } from "../deploy/discordCommons.mts"
 import { delay } from "jsr:@std/async/delay"
+import { save } from "../ORM/mod.mts"
 
 // Take an existing message
 let { id } = await api<
@@ -26,17 +27,6 @@ let { id } = await api<
 >("POST", `channels/${LEVERET_ID_CHANNEL}/messages`, {
 	content: "hi",
 })
-
-// Take the database file and delete everything in it
-using f = Deno.openSync(
-	import.meta.resolve("./db.txt").slice("file://".length),
-	{
-		create: true,
-		truncate: true,
-		read: false,
-		write: true,
-	},
-)
 
 const iStep = 100
 for (let i = 0;; i += iStep) {
@@ -64,7 +54,9 @@ for (let i = 0;; i += iStep) {
 
 	// Save to database
 	const dump = latestMessage.content || await fetch(latestMessage.attachments[0].url).then((r) => r.text())
-	f.writeSync(new TextEncoder().encode(dump))
+	for (const line of dump.split("\n")) {
+		if (line) await save(JSON.parse(line)).catch(console.warn)
+	}
 }
 
 // Delete the original message

@@ -1,8 +1,8 @@
-import { load } from "dotenv"
-import { parseEnv } from "zod-env"
+import { load } from "jsr:@std/dotenv@^0.225.5"
+import { parseEnv } from "jsr:@keawade/zod-env@^0.1.2"
 import { z } from "npm:zod@3"
 
-import { Client } from "mysql"
+import { Client } from "https://deno.land/x/mysql@v2.12.1/mod.ts"
 
 const rel = (path: string) => import.meta.resolve(path).slice("file://".length)
 
