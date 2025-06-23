@@ -4,6 +4,6 @@
 		"ORM": "../../ORM/mod.mts"
 	},
 	"exclude": [
-		"commands/tag/engine/"
+		"sandbox/engine"
 	]
 }
