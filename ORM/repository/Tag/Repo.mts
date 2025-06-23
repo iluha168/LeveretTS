@@ -31,6 +31,15 @@ export async function save(tagRow: TagRow, affectDB = true) {
 	cache.set(tagRow.name, tagModel)
 }
 
+export async function remove(tagRow: TagRow) {
+	const { affectedRows } = await db.execute(
+		"DELETE FROM Tag WHERE name=? AND owner=?",
+		[tagRow.name, tagRow.owner],
+	)
+	if (!affectedRows) throw new Error("Failed to delete tag", { cause: tagRow })
+	cache.delete(tagRow.name)
+}
+
 export async function* fetchTagNames(): AsyncGenerator<string> {
 	yield* cache.keys()
 }

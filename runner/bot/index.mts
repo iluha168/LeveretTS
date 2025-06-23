@@ -3,6 +3,8 @@ import { createBot } from "discordeno"
 
 import { applicationCommandRegistry, interactionCreateHandler } from "./commands/registry.mts"
 import {} from "./commands/tag/handler.mts"
+import {} from "./commands/tags/handler.mts"
+import {} from "./commands/tags/delete.mts"
 import {} from "./commands/eval/handler.mts"
 
 await load({
