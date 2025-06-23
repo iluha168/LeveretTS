@@ -2,14 +2,14 @@ import { evalCode } from "./engineInstance.mts"
 
 import { Message } from "../../../typings/leveret.d.ts"
 import { fetchTag } from "../util/fetchTag.mts"
-import { findTagNames } from "ORM"
+import { Tags } from "ORM"
 
 export const executeTag = async (name: string, msg: Omit<Message, "reply">, args?: string): ReturnType<typeof evalCode> => {
 	let tag
 	try {
 		tag = await fetchTag(name)
 		if (tag === null || !("body" in tag)) {
-			const similarTagNames = await findTagNames(name)
+			const similarTagNames = await Tags.findTagNames(name)
 			throw new Error(
 				`⚠️ Tag **${name}** doesn't exist.` + (
 					similarTagNames.length > 0

@@ -1,14 +1,14 @@
 import { fromFileUrl } from "jsr:@std/path/from-file-url"
 import { Paths, ToolHandlerResponse } from "./engine/tools/paths.mts"
-import { fetchTagNames, findTagNames } from "ORM"
+import { Tags } from "ORM"
 import { fetchTag } from "../util/fetchTag.mts"
 
 const handle = async (path: Paths, data: Promise<unknown>) => {
 	switch (path) {
 		case Paths.dumpTags:
-			return Array.fromAsync(fetchTagNames())
+			return Array.fromAsync(Tags.fetchTagNames())
 		case Paths.findTags:
-			return findTagNames(await data as string)
+			return Tags.findTagNames(await data as string)
 		case Paths.fetchTag:
 			return fetchTag(await data as string)
 	}

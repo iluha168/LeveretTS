@@ -1,4 +1,4 @@
-import { AliasTagModel, fetch, JsTagModel, TxtTagModel } from "ORM"
+import { AliasTagModel, JsTagModel, Tags, TxtTagModel } from "ORM"
 import { Util } from "../../../typings/leveret.d.ts"
 
 const unreachable = () => {
@@ -9,7 +9,7 @@ export const fetchTag = async (name: string): Promise<
 	ReturnType<Util["fetchTag"]>
 > => {
 	const hops = [name]
-	let tag = await fetch(name)
+	let tag = await Tags.fetch(name)
 	let args: string | undefined
 
 	for (;;) { // Alias-resolving loop
@@ -26,7 +26,7 @@ export const fetchTag = async (name: string): Promise<
 			throw new Error(`⚠️ Epic recursion error: ${chain}.`)
 		}
 		hops.push(alias)
-		tag = await fetch(alias)
+		tag = await Tags.fetch(alias)
 		if (tag) args ??= refArgs
 	}
 	return {
