@@ -1,7 +1,7 @@
 import { load } from "jsr:@std/dotenv"
 import { createBot } from "discordeno"
 
-import { bakeDescriptions, interactionCreateHandler } from "./commands/registry.mts"
+import { applicationCommandRegistry, interactionCreateHandler } from "./commands/registry.mts"
 import {} from "./commands/tag/handler.mts"
 import {} from "./commands/eval/handler.mts"
 
@@ -66,5 +66,6 @@ bot.events.interactionCreate = interactionCreateHandler
 
 await Promise.all([
 	bot.start(),
-	bot.rest.upsertGlobalApplicationCommands(bakeDescriptions()),
+	bot.rest.upsertGlobalApplicationCommands(applicationCommandRegistry.descriptions)
+		.then(() => applicationCommandRegistry.forgetDescriptions()),
 ])

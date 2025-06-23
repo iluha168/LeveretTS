@@ -1,10 +1,10 @@
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, commandOptionsParser } from "discordeno"
-import { register } from "../registry.mts"
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes } from "discordeno"
+import { applicationCommandRegistry } from "../registry.mts"
 import { evalCode } from "../../sandbox/engineInstance.mts"
 import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
 import { EvalResultToInteractionResponse } from "../../transformers/EvalResultToInteractionResponse.mts"
 
-register(
+applicationCommandRegistry.register(
 	{
 		name: "eval",
 		description: "Evaluates JavaScript",
@@ -21,8 +21,7 @@ register(
 			required: false,
 		}],
 	},
-	async (interaction) => {
-		const { code, args } = commandOptionsParser(interaction) as { code: string; args?: string }
+	async (interaction, { code, args }) => {
 		const deferTimeout = setTimeout(() => interaction.defer().catch(() => {}), 1000)
 		const res = await evalCode({
 			code,

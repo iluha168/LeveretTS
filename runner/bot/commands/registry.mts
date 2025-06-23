@@ -1,31 +1,69 @@
-import type { CreateApplicationCommand } from "discordeno"
+import { type ApplicationCommandOptionTypes, commandOptionsParser, type CreateSlashApplicationCommand } from "discordeno"
+import type { CommandOptionsParserOutput } from "../transformers/CommandOptionsParserOutput.mts"
 import type { bot } from "../index.mts"
 
 type Interaction = typeof bot.transformers.$inferredTypes.interaction
-export type Handler = (interaction: Interaction) => Promise<void>
+export type Handler<T> = (interaction: Interaction, options: T) => Promise<unknown>
+// deno-lint-ignore no-explicit-any
+type Hanydler = Handler<any>
 
-const descriptions: Map<string, CreateApplicationCommand> = new Map()
-const handlers: Map<string, Handler> = new Map()
+type CreateSlashSubCommandOption = NonNullable<CreateSlashApplicationCommand["options"]>[0]
 
-export const register = (
-	description: CreateApplicationCommand,
-	handler: Handler,
-) => {
-	console.debug("Registering", description.name)
-	descriptions.set(description.name, description)
-	handlers.set(description.name, handler)
+class Registry<
+	Description extends { name: string; options?: CreateSlashSubCommandOption[] },
+> {
+	constructor(public readonly registryLabel: string) {}
+	public readonly descriptions: Description[] = []
+	public readonly handlers: Map<string, Hanydler> = new Map()
+	private readonly subRegistryGCs: (typeof this.forgetDescriptions)[] = []
+
+	register<const D extends Description>(
+		description: D,
+		handler: NoInfer<Handler<CommandOptionsParserOutput<D["options"]>>>,
+	) {
+		console.debug("Registering", `${this.registryLabel}/${description.name}`)
+		this.descriptions.push(description)
+		this.handlers.set(description.name, handler)
+	}
+
+	registerSubRegistry(description: Omit<Description, "options">) {
+		const subRegistry = new Registry<
+			CreateSlashSubCommandOption & { type: ApplicationCommandOptionTypes.SubCommand | ApplicationCommandOptionTypes.SubCommandGroup }
+		>(
+			`${this.registryLabel}/${description.name}`,
+		)
+		this.subRegistryGCs.push(() => subRegistry.forgetDescriptions())
+		this.register(
+			{ ...description, options: subRegistry.descriptions } as Description,
+			async (interaction, options) => {
+				const [[subName, subOptions]] = Object.entries(options)
+				const handler = subRegistry.handlers.get(subName)
+				if (!handler) {
+					return console.warn("No handler for interaction called", description.name, subName)
+				}
+				await handler(interaction, subOptions)
+			},
+		)
+		return subRegistry.register.bind(subRegistry)
+	}
+
+	forgetDescriptions() {
+		queueMicrotask(() => {
+			for (const gc of this.subRegistryGCs.splice(0)) {
+				if (gc() <= 0) throw new Error("A subregistry must not be empty")
+			}
+		})
+		return this.descriptions.splice(0).length
+	}
 }
 
-export const bakeDescriptions = () => {
-	queueMicrotask(() => descriptions.clear())
-	return Array.from(descriptions.values())
-}
+export const applicationCommandRegistry = new Registry<CreateSlashApplicationCommand>("Commands")
 
 export const interactionCreateHandler = async (interaction: Interaction) => {
 	if (!interaction.data) return
-	const handler = handlers.get(interaction.data.name)
+	const handler = applicationCommandRegistry.handlers.get(interaction.data.name)
 	if (!handler) {
 		return console.warn("No handler for interaction called", interaction.data.name)
 	}
-	await handler(interaction)
+	await handler(interaction, commandOptionsParser(interaction))
 }
