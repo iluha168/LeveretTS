@@ -1,10 +1,14 @@
-import {} from "jsr:@std/dotenv/load"
+import { load } from "jsr:@std/dotenv"
 import { createBot } from "discordeno"
 
 import { bakeDescriptions, interactionCreateHandler } from "./commands/registry.mts"
 import {} from "./commands/tag/handler.mts"
 import {} from "./commands/eval/handler.mts"
 
+await load({
+	export: true,
+	envPath: new URL(import.meta.resolve("./.env")).pathname,
+})
 export const bot = createBot({
 	events: {
 		ready() {
