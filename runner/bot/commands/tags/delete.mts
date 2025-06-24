@@ -2,6 +2,7 @@ import { ApplicationCommandOptionTypes, InteractionTypes } from "discordeno"
 import { tagsSubcommandRegister } from "./handler.mts"
 import { Tags, UserModel } from "ORM"
 import { tagNameOption, tagNameOptionAutocomplete } from "../common/tagNameOption.mts"
+import { respondLargeString } from "../common/respondLargeString.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommand,
@@ -16,17 +17,15 @@ tagsSubcommandRegister({
 
 	const tag = await Tags.fetch(name)
 	if (!tag) {
-		return interaction.respond(`⚠️ Tag **${name}** doesn't exist.`)
+		return respondLargeString(interaction, `⚠️ Tag **${name}** doesn't exist.`)
 	}
 	try {
 		await userTags.remove(tag)
 	} catch (e) {
 		if (e instanceof Error) {
-			return interaction.respond({
-				content: e.message,
-				allowedMentions: { parse: [] },
-			})
+			return respondLargeString(interaction, e.message)
 		}
+		throw e
 	}
-	return interaction.respond(`✅ Deleted tag **${name}**.`)
+	return respondLargeString(interaction, `✅ Deleted tag **${name}**.`)
 })

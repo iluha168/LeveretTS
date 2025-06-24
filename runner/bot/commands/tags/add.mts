@@ -3,6 +3,7 @@ import { tagsSubcommandRegister } from "./handler.mts"
 import { AliasTagModel, JsTagModel, TxtTagModel, UserModel } from "ORM"
 import { unreachable } from "../../util/unreachable.mts"
 import { tagNameOption, tagNameOptionAutocomplete } from "../common/tagNameOption.mts"
+import { respondLargeString } from "../common/respondLargeString.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommandGroup,
@@ -72,11 +73,9 @@ tagsSubcommandRegister({
 		)
 	} catch (e) {
 		if (e instanceof Error) {
-			return interaction.respond({
-				content: e.message,
-				allowedMentions: { parse: [] },
-			})
+			return respondLargeString(interaction, e.message)
 		}
+		throw e
 	}
-	return interaction.respond(`✅ Created tag **${tagName}**.`)
+	return respondLargeString(interaction, `✅ Created tag **${tagName}**.`)
 })

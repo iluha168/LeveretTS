@@ -65,5 +65,11 @@ export const interactionCreateHandler = async (interaction: Interaction) => {
 	if (!handler) {
 		return console.warn("No handler for interaction called", interaction.data.name)
 	}
-	await handler(interaction, commandOptionsParser(interaction))
+	try {
+		await handler(interaction, commandOptionsParser(interaction))
+	} catch (e) {
+		if (e instanceof Error) {
+			console.error(`Application command "${interaction.data.name}" failed`, e)
+		} else throw e
+	}
 }

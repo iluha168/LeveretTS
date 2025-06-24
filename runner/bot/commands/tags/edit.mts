@@ -3,6 +3,7 @@ import { tagsSubcommandRegister } from "./handler.mts"
 import { AliasTagModel, JsTagModel, Tags, TxtTagModel, UserModel } from "ORM"
 import { unreachable } from "../../util/unreachable.mts"
 import { tagNameOption, tagNameOptionAutocomplete } from "../common/tagNameOption.mts"
+import { respondLargeString } from "../common/respondLargeString.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommandGroup,
@@ -57,7 +58,7 @@ tagsSubcommandRegister({
 
 	const tag = await Tags.fetch(tagName)
 	if (!tag) {
-		return interaction.respond(`⚠️ Tag **${tagName}** doesn't exist.`)
+		return respondLargeString(interaction, `⚠️ Tag **${tagName}** doesn't exist.`)
 	}
 	try {
 		await userTags.edit(
@@ -70,11 +71,9 @@ tagsSubcommandRegister({
 		)
 	} catch (e) {
 		if (e instanceof Error) {
-			return interaction.respond({
-				content: e.message,
-				allowedMentions: { parse: [] },
-			})
+			return respondLargeString(interaction, e.message)
 		}
+		throw e
 	}
-	return interaction.respond(`Edited tag **${tagName}**. ✅`)
+	return respondLargeString(interaction, `Edited tag **${tagName}**. ✅`)
 })

@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionTypes } from "discordeno"
 import { tagsSubcommandRegister } from "./handler.mts"
 import { UserModel } from "ORM"
+import { respondLargeString } from "../common/respondLargeString.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommand,
@@ -17,8 +18,8 @@ tagsSubcommandRegister({
 	const UserIs = id === interaction.user.id ? "You're" : `<@${id}> is`
 	const quota = await new UserModel(id).size()
 	const percent = Math.round(100 * Number(quota) / Number(UserModel.MAX_SIZE))
-	return interaction.respond({
-		content: `ℹ️ ${UserIs} using **${Number(quota) / 1024}**/**${Number(UserModel.MAX_SIZE) / 1024}** KiB of the available storage (**${percent}%**).`,
-		allowedMentions: { parse: [] },
-	})
+	return respondLargeString(
+		interaction,
+		`ℹ️ ${UserIs} using **${Number(quota) / 1024}**/**${Number(UserModel.MAX_SIZE) / 1024}** KiB of the available storage (**${percent}%**).`,
+	)
 })
