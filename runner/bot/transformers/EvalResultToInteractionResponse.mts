@@ -22,5 +22,8 @@ export const EvalResultToInteractionResponse = async (
 	if (callbackData.files) {
 		await interaction.defer().catch(() => {})
 	}
-	await interaction.respond(callbackData)
+	await interaction.respond({
+		...callbackData,
+		allowedMentions: { parse: [] },
+	})
 }

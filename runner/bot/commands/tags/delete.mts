@@ -17,7 +17,10 @@ tagsSubcommandRegister({
 		await new UserModel(interaction.user.id).tags.remove(tag)
 	} catch (e) {
 		if (e instanceof Error) {
-			return interaction.respond(e.message)
+			return interaction.respond({
+				content: e.message,
+				allowedMentions: { parse: [] },
+			})
 		}
 	}
 	return interaction.respond(`✅ Deleted tag **${name}**.`)
