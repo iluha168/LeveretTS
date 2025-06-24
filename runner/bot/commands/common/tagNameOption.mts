@@ -22,7 +22,8 @@ export const tagNameOptionAutocomplete = async (
 ) => interaction.respond({
 	choices: (await Tags.findTagNames(tagName, userTags?.user.id))
 		.values()
-		.take(25)
+		.take(25) // Discord limitation
+		.filter((name) => name.length <= 100) // Discord limitation
 		.map((name) => ({ name, value: name }))
 		.toArray(),
 })
