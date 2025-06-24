@@ -23,7 +23,34 @@ export class UserTagsModel {
 			console.error(err) // This is a programmer's mistake, not user's, we want to see this error
 			throw err
 		}
-		return await Tags.save(newTag.toTagRow)
+		const newTagRow = newTag.toTagRow
+		if (tag.ownerId !== newTag.ownerId) {
+			// Change of ownership, aka a move. The receiving user loses space.
+			if (await newTag.owner.size() + BigInt(newTagRow.body.length) + BigInt(newTagRow.name.length) > UserModel.MAX_SIZE) {
+				throw new Error(`⚠️ <@${newTag.ownerId}> would run out of storage space.`)
+			}
+		} else {
+			// Edit in-place, consider losing space as tag owner.
+			if (await tag.owner.size() - BigInt(tag.toTagRow.body.length) + BigInt(newTagRow.body.length) > UserModel.MAX_SIZE) {
+				throw new Error(`⚠️ <@${tag.ownerId}> would run out of storage space.`)
+			}
+		}
+		return await Tags.save(newTagRow)
+	}
+
+	async add(newTag: TagModel) {
+		if (newTag.ownerId !== this.user.id) {
+			throw new Error(`⚠️ Cannot create tags as another user.`)
+		}
+		const oldTag = await Tags.fetch(newTag.name)
+		if (oldTag) {
+			throw new Error(`⚠️ Tag **${newTag.name}** already exists, and is owned by <@${oldTag.ownerId}>.`)
+		}
+		const newTagRow = newTag.toTagRow
+		if (await newTag.owner.size() + BigInt(newTagRow.body.length) + BigInt(newTagRow.name.length) > UserModel.MAX_SIZE) {
+			throw new Error(`⚠️ <@${newTag.ownerId}> would run out of storage space.`)
+		}
+		return await Tags.save(newTagRow)
 	}
 
 	async find(namePart: string) {

@@ -2,6 +2,7 @@ import { ApplicationCommandOptionTypes, InteractionTypes } from "discordeno"
 import { tagsSubcommandRegister } from "./handler.mts"
 import { AliasTagModel, JsTagModel, Tags, TxtTagModel, UserModel } from "ORM"
 import { unreachable } from "../../util/unreachable.mts"
+import { tagNameOption } from "../common/tagNameOption.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommandGroup,
@@ -12,10 +13,7 @@ tagsSubcommandRegister({
 		name: "text",
 		description: "Sets tag to be a text tag",
 		options: [{
-			type: ApplicationCommandOptionTypes.String,
-			name: "name",
-			description: "Tag's name",
-			required: true,
+			...tagNameOption,
 			autocomplete: true,
 		}, {
 			type: ApplicationCommandOptionTypes.String,
@@ -28,10 +26,7 @@ tagsSubcommandRegister({
 		name: "code",
 		description: "Sets tag to be a code tag",
 		options: [{
-			type: ApplicationCommandOptionTypes.String,
-			name: "name",
-			description: "Tag's name",
-			required: true,
+			...tagNameOption,
 			autocomplete: true,
 		}, {
 			type: ApplicationCommandOptionTypes.String,
@@ -44,10 +39,7 @@ tagsSubcommandRegister({
 		name: "alias",
 		description: "Sets tag to be an alias tag",
 		options: [{
-			type: ApplicationCommandOptionTypes.String,
-			name: "name",
-			description: "Tag's name",
-			required: true,
+			...tagNameOption,
 			autocomplete: true,
 		}, {
 			type: ApplicationCommandOptionTypes.String,

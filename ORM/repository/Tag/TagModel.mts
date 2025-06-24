@@ -1,4 +1,5 @@
 import type { TagRow } from "./row.mts"
+import { UserModel } from "../User/UserModel.mts"
 
 export abstract class TagModel {
 	constructor(
@@ -7,4 +8,8 @@ export abstract class TagModel {
 	) {}
 
 	abstract get toTagRow(): TagRow
+
+	get owner(): UserModel {
+		return new UserModel(this.ownerId)
+	}
 }

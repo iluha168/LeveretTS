@@ -1,17 +1,13 @@
 import { ApplicationCommandOptionTypes } from "discordeno"
 import { tagsSubcommandRegister } from "./handler.mts"
 import { Tags, UserModel } from "ORM"
+import { tagNameOption } from "../common/tagNameOption.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommand,
 	name: "delete",
 	description: "Deletes a tag",
-	options: [{
-		name: "name",
-		type: ApplicationCommandOptionTypes.String,
-		description: "Tag's name",
-		required: true,
-	}],
+	options: [tagNameOption],
 }, async (interaction, { name }) => {
 	const tag = await Tags.fetch(name)
 	if (!tag) {

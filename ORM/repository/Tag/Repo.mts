@@ -16,6 +16,9 @@ export async function fetch(name: string) {
 }
 
 export async function save(tagRow: TagRow, affectDB = true) {
+	if (affectDB && new TextEncoder().encode(tagRow.body).byteLength > 20_000) {
+		throw new Error("⚠️ The tag body must not exceed 20 KBytes.")
+	}
 	const { error, data: tagModel } = zTagRow.safeParse(tagRow)
 	if (error) {
 		throw new TypeError(error.issues.map((i) => i.message).join("\n"))
