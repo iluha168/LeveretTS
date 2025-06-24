@@ -8,6 +8,7 @@ import {} from "./commands/tags/add.mts"
 import {} from "./commands/tags/delete.mts"
 import {} from "./commands/tags/edit.mts"
 import {} from "./commands/tags/quota.mts"
+import {} from "./commands/tags/raw.mts"
 import {} from "./commands/eval/handler.mts"
 
 await load({
