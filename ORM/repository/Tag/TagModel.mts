@@ -1,4 +1,4 @@
-import type { TagRow } from "./row.mts"
+import { type TagRow, zTagRow } from "./row.mts"
 import { UserModel } from "../User/UserModel.mts"
 
 export abstract class TagModel {
@@ -10,6 +10,15 @@ export abstract class TagModel {
 	) {}
 
 	abstract get toTagRow(): TagRow
+
+	copy(makeChanges?: (row: Omit<TagRow, "type">) => void): this {
+		const row = this.toTagRow
+		makeChanges?.(row)
+		const copy = zTagRow.parse(row)
+
+		// This operation keeps the same subclass type
+		return copy as this
+	}
 
 	/** @returns How many bytes a tag takes in the database */
 	abstract size(): bigint

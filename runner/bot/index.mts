@@ -5,6 +5,7 @@ import { applicationCommandRegistry, interactionCreateHandler } from "./commands
 import {} from "./commands/tag/handler.mts"
 import {} from "./commands/tags/handler.mts"
 import {} from "./commands/tags/add.mts"
+import {} from "./commands/tags/chown.mts"
 import {} from "./commands/tags/delete.mts"
 import {} from "./commands/tags/edit.mts"
 import {} from "./commands/tags/quota.mts"
