@@ -21,6 +21,7 @@ export const db = await new Client().connect({
 	hostname: env.DB_HOSTNAME,
 	username: env.DB_USERNAME,
 	password: env.DB_PASSWORD,
+	db: "leveret",
 	charset: "utf8mb4",
 })
 
