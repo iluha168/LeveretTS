@@ -2,7 +2,7 @@ import { type ApplicationCommandOptionTypes, commandOptionsParser, type CreateSl
 import type { CommandOptionsParserOutput } from "../transformers/CommandOptionsParserOutput.mts"
 import type { bot } from "../index.mts"
 
-type Interaction = typeof bot.transformers.$inferredTypes.interaction
+export type Interaction = typeof bot.transformers.$inferredTypes.interaction
 export type Handler<T> = (interaction: Interaction, options: T) => Promise<unknown>
 // deno-lint-ignore no-explicit-any
 type Hanydler = Handler<any>

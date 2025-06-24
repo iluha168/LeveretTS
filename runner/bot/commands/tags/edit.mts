@@ -2,7 +2,7 @@ import { ApplicationCommandOptionTypes, InteractionTypes } from "discordeno"
 import { tagsSubcommandRegister } from "./handler.mts"
 import { AliasTagModel, JsTagModel, Tags, TxtTagModel, UserModel } from "ORM"
 import { unreachable } from "../../util/unreachable.mts"
-import { tagNameOption } from "../common/tagNameOption.mts"
+import { tagNameOption, tagNameOptionAutocomplete } from "../common/tagNameOption.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommandGroup,
@@ -12,10 +12,7 @@ tagsSubcommandRegister({
 		type: ApplicationCommandOptionTypes.SubCommand,
 		name: "text",
 		description: "Sets tag to be a text tag",
-		options: [{
-			...tagNameOption,
-			autocomplete: true,
-		}, {
+		options: [tagNameOption, {
 			type: ApplicationCommandOptionTypes.String,
 			name: "body",
 			description: "Tag's new content",
@@ -25,10 +22,7 @@ tagsSubcommandRegister({
 		type: ApplicationCommandOptionTypes.SubCommand,
 		name: "code",
 		description: "Sets tag to be a code tag",
-		options: [{
-			...tagNameOption,
-			autocomplete: true,
-		}, {
+		options: [tagNameOption, {
 			type: ApplicationCommandOptionTypes.String,
 			name: "js",
 			description: "Tag's new code, written in JavaScript language",
@@ -38,14 +32,12 @@ tagsSubcommandRegister({
 		type: ApplicationCommandOptionTypes.SubCommand,
 		name: "alias",
 		description: "Sets tag to be an alias tag",
-		options: [{
-			...tagNameOption,
-			autocomplete: true,
-		}, {
+		options: [tagNameOption, {
 			type: ApplicationCommandOptionTypes.String,
 			name: "ref",
 			description: "Existing tag's name, which this one will point to",
 			required: true,
+			autocomplete: true,
 		}, {
 			type: ApplicationCommandOptionTypes.String,
 			name: "args",
@@ -58,13 +50,9 @@ tagsSubcommandRegister({
 	const tagName = text?.name ?? code?.name ?? alias?.name ?? unreachable()
 
 	if (interaction.type === InteractionTypes.ApplicationCommandAutocomplete) {
-		return interaction.respond({
-			choices: (await userTags.find(tagName))
-				.values()
-				.take(25)
-				.map((name) => ({ name, value: name }))
-				.toArray(),
-		})
+		// TODO: check if ref is actually focused as part of framework
+		if (alias?.ref !== undefined) return tagNameOptionAutocomplete(interaction, alias.ref)
+		return tagNameOptionAutocomplete(interaction, tagName, userTags)
 	}
 
 	const tag = await Tags.fetch(tagName)

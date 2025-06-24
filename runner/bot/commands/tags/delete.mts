@@ -1,7 +1,7 @@
-import { ApplicationCommandOptionTypes } from "discordeno"
+import { ApplicationCommandOptionTypes, InteractionTypes } from "discordeno"
 import { tagsSubcommandRegister } from "./handler.mts"
 import { Tags, UserModel } from "ORM"
-import { tagNameOption } from "../common/tagNameOption.mts"
+import { tagNameOption, tagNameOptionAutocomplete } from "../common/tagNameOption.mts"
 
 tagsSubcommandRegister({
 	type: ApplicationCommandOptionTypes.SubCommand,
@@ -9,12 +9,17 @@ tagsSubcommandRegister({
 	description: "Deletes a tag",
 	options: [tagNameOption],
 }, async (interaction, { name }) => {
+	const userTags = new UserModel(interaction.user.id).tags
+	if (interaction.type === InteractionTypes.ApplicationCommandAutocomplete) {
+		return tagNameOptionAutocomplete(interaction, name, userTags)
+	}
+
 	const tag = await Tags.fetch(name)
 	if (!tag) {
 		return interaction.respond(`⚠️ Tag **${name}** doesn't exist.`)
 	}
 	try {
-		await new UserModel(interaction.user.id).tags.remove(tag)
+		await userTags.remove(tag)
 	} catch (e) {
 		if (e instanceof Error) {
 			return interaction.respond({

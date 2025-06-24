@@ -1,9 +1,9 @@
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes } from "discordeno"
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, InteractionTypes } from "discordeno"
 import { applicationCommandRegistry } from "../registry.mts"
 import { executeTag } from "../../sandbox/executeTag.mts"
 import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
 import { EvalResultToInteractionResponse } from "../../transformers/EvalResultToInteractionResponse.mts"
-import { tagNameOption } from "../common/tagNameOption.mts"
+import { tagNameOption, tagNameOptionAutocomplete } from "../common/tagNameOption.mts"
 
 applicationCommandRegistry.register(
 	{
@@ -18,6 +18,10 @@ applicationCommandRegistry.register(
 		}],
 	},
 	async (interaction, { name, args }) => {
+		if (interaction.type === InteractionTypes.ApplicationCommandAutocomplete) {
+			return tagNameOptionAutocomplete(interaction, name)
+		}
+
 		const deferTimeout = setTimeout(() => interaction.defer().catch(() => {}), 1000)
 		const res = await executeTag(
 			name,
