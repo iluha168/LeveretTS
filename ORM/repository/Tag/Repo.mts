@@ -45,9 +45,10 @@ export async function* fetchTagNames(): AsyncGenerator<string> {
 }
 
 const findTagNamesLevenshteinOptions = { maxCost: 8, deletion: 6, substitution: 4, insertion: 0.1 }
-export async function findTagNames(targetName: string): Promise<string[]> {
+export async function findTagNames(targetName: string, ownerId?: bigint): Promise<string[]> {
 	const candidates: [string, number][] = []
-	for await (const name of fetchTagNames()) {
+	for await (const [name, tag] of cache) {
+		if (ownerId !== undefined && tag.ownerId !== ownerId) continue
 		const distance: number = levenshtein(targetName, name, findTagNamesLevenshteinOptions)
 		if (distance > 8) continue
 		candidates.push([name, distance] as const)
