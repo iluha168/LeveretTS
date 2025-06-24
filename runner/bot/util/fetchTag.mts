@@ -1,9 +1,6 @@
 import { AliasTagModel, JsTagModel, Tags, TxtTagModel } from "ORM"
 import { Util } from "../../../typings/leveret.d.ts"
-
-const unreachable = () => {
-	throw new RangeError("Unreachable")
-}
+import { unreachable } from "./unreachable.mts"
 
 export const fetchTag = async (name: string): Promise<
 	ReturnType<Util["fetchTag"]>
