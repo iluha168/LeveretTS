@@ -18,4 +18,11 @@ export class TxtTagModel extends TagModel {
 			body: this.body,
 		}
 	}
+
+	override size(): bigint {
+		return BigInt(
+			TagModel.TE.encode(this.name).byteLength +
+				TagModel.TE.encode(this.body).byteLength,
+		)
+	}
 }

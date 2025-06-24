@@ -28,6 +28,15 @@ export class AliasTagModel extends TagModel {
 		}
 	}
 
+	override size(): bigint {
+		return BigInt(
+			TagModel.TE.encode(this.name).byteLength +
+				TagModel.TE.encode(this.refName).byteLength +
+				1 +
+				TagModel.TE.encode(this.refArgs).byteLength,
+		)
+	}
+
 	deref() {
 		return fetch(this.refName)
 	}

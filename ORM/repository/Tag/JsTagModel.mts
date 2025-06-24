@@ -18,4 +18,11 @@ export class JsTagModel extends TagModel {
 			body: this.code,
 		}
 	}
+
+	override size(): bigint {
+		return BigInt(
+			TagModel.TE.encode(this.name).byteLength +
+				TagModel.TE.encode(this.code).byteLength,
+		)
+	}
 }
