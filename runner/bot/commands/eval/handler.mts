@@ -3,12 +3,14 @@ import { applicationCommandRegistry } from "../registry.mts"
 import { evalCode } from "../../sandbox/engineInstance.mts"
 import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
 import { EvalResultToInteractionResponse } from "../../transformers/EvalResultToInteractionResponse.mts"
+import { contextsEverywhere } from "../common/contexts.mts"
 
 applicationCommandRegistry.register(
 	{
 		name: "eval",
 		description: "Evaluates JavaScript",
 		type: ApplicationCommandTypes.ChatInput,
+		contexts: contextsEverywhere,
 		options: [{
 			name: "code",
 			type: ApplicationCommandOptionTypes.String,

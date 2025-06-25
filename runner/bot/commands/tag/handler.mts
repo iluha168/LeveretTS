@@ -4,12 +4,14 @@ import { executeTag } from "../../sandbox/executeTag.mts"
 import { DiscordInteractionToLeveretMessage } from "../../transformers/DiscordInteractionToLeveretMessage.mts"
 import { EvalResultToInteractionResponse } from "../../transformers/EvalResultToInteractionResponse.mts"
 import { tagNameOption, tagNameOptionAutocomplete } from "../common/tagNameOption.mts"
+import { contextsEverywhere } from "../common/contexts.mts"
 
 applicationCommandRegistry.register(
 	{
 		name: "tag",
 		description: "Fetch a tag",
 		type: ApplicationCommandTypes.ChatInput,
+		contexts: contextsEverywhere,
 		options: [tagNameOption, {
 			name: "args",
 			type: ApplicationCommandOptionTypes.String,
