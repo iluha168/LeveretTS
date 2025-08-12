@@ -18,7 +18,8 @@ import {
 } from "https://deno.land/x/discord_api_types@0.37.115/v10.ts"
 import { api, LEVERET_ID_BOT, LEVERET_ID_CHANNEL } from "../deploy/discordCommons.mts"
 import { delay } from "jsr:@std/async/delay"
-import { save } from "../ORM/mod.mts"
+import { Tags } from "../ORM/mod.mts"
+import { TagRow } from "../ORM/repository/Tag/row.mts"
 
 // Take an existing message
 let { id } = await api<
@@ -55,7 +56,7 @@ for (let i = 0;; i += iStep) {
 	// Save to database
 	const dump = latestMessage.content || await fetch(latestMessage.attachments[0].url).then((r) => r.text())
 	for (const line of dump.split("\n")) {
-		if (line) await save(JSON.parse(line)).catch(console.warn)
+		if (line) await Tags.save(JSON.parse(line) as TagRow).catch(console.warn)
 	}
 }
 
