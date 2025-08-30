@@ -1,6 +1,6 @@
 import { fromFileUrl } from "jsr:@std/path/from-file-url"
 import { CodeEvalProps } from "./CodeEvalProps.mts"
-import type { ValidatedReply } from "./engine/server/impl/validateReply.mts"
+import type { ValidatedReply } from "./engine/tools/ValidatedReply.d.ts"
 import {} from "./toolsProvider.mts"
 
 const f = (path: string) => fromFileUrl(import.meta.resolve(path))

@@ -1,15 +1,5 @@
 import { z } from "zod"
-import type { Embed as RawLeveretEmbed } from "../../../../../../typings/leveret.d.ts"
-
-type LeveretEmbed = { embed: Omit<RawLeveretEmbed["embed"], "type"> }
-type Embeds = {
-	embeds: [LeveretEmbed["embed"]]
-}
-type Content = {
-	content: string
-}
-
-export type ValidatedReply = Content | Embeds | (Content & Embeds)
+import type { Content, Embeds, LeveretEmbed, ValidatedReply } from "../../tools/ValidatedReply.d.ts"
 
 const zMedia = z.strictObject({
 	url: z.string().url().min(1).max(256),

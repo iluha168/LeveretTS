@@ -1,5 +1,11 @@
 {
 	"tasks": {
-		"fmt": "deno fmt --indent-width 4 --no-semicolons --use-tabs --line-width 200 --watch"
+		"fmt": "deno fmt --watch"
+	},
+	"fmt": {
+		"indentWidth": 4,
+		"semiColons": false,
+		"useTabs": true,
+		"lineWidth": 200
 	}
 }

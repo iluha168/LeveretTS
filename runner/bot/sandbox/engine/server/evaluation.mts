@@ -1,7 +1,8 @@
 import ivm from "isolated-vm"
 import type { CodeEvalProps } from "../../CodeEvalProps.mts"
 import { assignCallers, createExternalFnAssigner } from "../tools/callers.mts"
-import { ValidatedReply, validateReply } from "./impl/validateReply.mts"
+import { validateReply } from "./impl/validateReply.mts"
+import type { ValidatedReply } from "../tools/ValidatedReply.d.ts"
 
 const nullObj = new ivm.ExternalCopy(Object.create(null))
 

@@ -1,6 +1,6 @@
 import { request } from "node:http"
 import type { Util } from "../../../../../typings/leveret.d.ts"
-import { Paths, ToolHandlerResponse } from "./paths.mts"
+import { Paths, type ToolHandlerResponse } from "./paths.mts"
 
 // deno-fmt-ignore
 const fetchTool = <T,>(path: Paths, body?: any) => new Promise<T>(

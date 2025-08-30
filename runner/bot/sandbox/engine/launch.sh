@@ -2,5 +2,5 @@
 set -e
 
 source ~/.nvm/nvm.sh
-nvm use v20.9.0
-npx tsx index.mts
+nvm use v24.7.0
+node index.mts
