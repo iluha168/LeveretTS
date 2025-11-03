@@ -1,4 +1,4 @@
-import type { APIEmbed, UserFlags } from "https://deno.land/x/discord_api_types@0.38.2/v10.ts"
+import type { APIEmbed, UserFlags } from "discord_api_types"
 
 export type Maybe<T> = T | Record<keyof T, null>
 
@@ -87,10 +87,15 @@ export type Tag = {
 }
 
 export type Util = {
+	dumpTags(full: true): (
+		| Hops
+		| (Tag & Hops)
+	)[]
 	dumpTags(): string[]
 	findTags(name: string): string[]
 	fetchTag(name: string):
-		| (Hops | (Tag & Hops))
+		| Hops
+		| (Tag & Hops)
 		| null
 	executeTag(name: string, ...args: string[]): unknown
 	/** Not available outside a guild */
