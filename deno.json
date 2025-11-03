@@ -7,5 +7,8 @@
 		"semiColons": false,
 		"useTabs": true,
 		"lineWidth": 200
+	},
+	"imports": {
+		"discord_api_types": "https://deno.land/x/discord_api_types@0.38.2/v10.ts"
 	}
 }

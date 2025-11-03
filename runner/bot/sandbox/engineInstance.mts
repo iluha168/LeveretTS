@@ -1,4 +1,4 @@
-import { fromFileUrl } from "jsr:@std/path/from-file-url"
+import { fromFileUrl } from "path/from-file-url"
 import { CodeEvalProps } from "./CodeEvalProps.mts"
 import type { ValidatedReply } from "./engine/tools/ValidatedReply.d.ts"
 import {} from "./toolsProvider.mts"

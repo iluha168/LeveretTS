@@ -1,4 +1,4 @@
-import { load } from "jsr:@std/dotenv"
+import { load } from "dotenv"
 import { createBot } from "discordeno"
 
 import { applicationCommandRegistry, interactionCreateHandler } from "./commands/registry.mts"

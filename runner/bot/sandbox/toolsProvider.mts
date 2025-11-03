@@ -1,4 +1,4 @@
-import { fromFileUrl } from "jsr:@std/path/from-file-url"
+import { fromFileUrl } from "path/from-file-url"
 import { Paths, ToolHandlerResponse } from "./engine/tools/paths.mts"
 import { Tags } from "ORM"
 import { fetchTag } from "../util/fetchTag.mts"

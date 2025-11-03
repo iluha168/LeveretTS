@@ -1,5 +1,8 @@
 {
 	"imports": {
+		"discord_api_types": "https://deno.land/x/discord_api_types@0.38.2/v10.ts",
+		"path": "jsr:@std/path@^1.1.2",
+		"dotenv": "jsr:@std/dotenv@^0.225.5",
 		"discordeno": "npm:discordeno@21.0.0",
 		"ORM": "../../ORM/mod.mts"
 	},

@@ -6,7 +6,9 @@
     "jsr:@keawade/zod-env@~0.1.2": "0.1.2",
     "jsr:@std/dotenv@*": "0.225.3",
     "jsr:@std/dotenv@~0.225.5": "0.225.5",
+    "jsr:@std/internal@^1.0.10": "1.0.12",
     "jsr:@std/path@*": "1.0.8",
+    "jsr:@std/path@^1.1.2": "1.1.2",
     "jsr:@std/streams@*": "1.0.9",
     "npm:discordeno@21.0.0": "21.0.0",
     "npm:zod@3": "3.25.56"
@@ -30,8 +32,17 @@
     "@std/dotenv@0.225.5": {
       "integrity": "9ce6f9d0ec3311f74a32535aa1b8c62ed88b1ab91b7f0815797d77a6f60c922f"
     },
+    "@std/internal@1.0.12": {
+      "integrity": "972a634fd5bc34b242024402972cd5143eac68d8dffaca5eaa4dba30ce17b027"
+    },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    },
+    "@std/path@1.1.2": {
+      "integrity": "c0b13b97dfe06546d5e16bf3966b1cadf92e1cc83e56ba5476ad8b498d9e3038",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
     },
     "@std/streams@1.0.9": {
       "integrity": "a9d26b1988cdd7aa7b1f4b51e1c36c1557f3f252880fa6cc5b9f37078b1a5035"
@@ -333,6 +344,8 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/dotenv@~0.225.5",
+      "jsr:@std/path@^1.1.2",
       "npm:discordeno@21.0.0"
     ]
   }
