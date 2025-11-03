@@ -26,13 +26,8 @@ step Typecheck deno check $1.mts
 step Transpiling deno run -WRE npm:typescript/tsc --noCheck --outDir ../dist
 cd ..
 
-step Bundling deno run -A https://deno.land/x/esbuild/mod.js\
+step Bundling deno run -A npm:esbuild\
     --minify --bundle --outfile=$OUT_PATH --allow-overwrite\
     dist/tags/$1.mjs
 
-echo "$(cat deploy/credits.mts $OUT_PATH)" > $OUT_PATH 
-
-# Skip deploy by passing any second argument
-if ! [ $2 ]; then
-    step Deploying deno run -NER deploy/index.mts $1 $OUT_PATH
-fi
+echo "$(cat deploy/credits.mts $OUT_PATH)" > $OUT_PATH
