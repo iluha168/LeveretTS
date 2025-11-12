@@ -5,11 +5,9 @@ if ! [ $1 ]; then
 fi
 
 for((;;)); do
-    clear
     echo -n Waiting for changes...
     watch -n 1 -d -t -g stat "tags/$1.mts" \| shasum > /dev/null
-    echo \ Tag changed!
-    deploy/deploy.sh "$1" || exit $?
-    echo Success
-    sleep 1
+    clear
+    deploy/build.sh "$1" || exit $?
+    deno run -A ./runner/bot/sandbox/engineInstance.mts "$1" "$(cat dist/o.js)" "${*:2}"
 done

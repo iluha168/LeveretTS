@@ -40,3 +40,24 @@ export const evalCode = async (props: CodeEvalProps): Promise<ValidatedReply | u
 	json = json ? JSON.parse(json) : undefined
 	return typeof json === "string" ? { content: json } : json
 }
+
+if (import.meta.main) {
+	while (!await Deno.connect(sandboxPath).catch(() => false));
+
+	const [name, body, ...args] = Deno.args
+	const result = await evalCode({
+		code: body,
+		// @ts-expect-error dbg
+		msg: {},
+		tag: {
+			body,
+			hops: [name],
+			name,
+			owner: "0",
+			args: args.join(" "),
+		},
+	})
+	if (result) {
+		console.log("content" in result ? result.content : JSON.stringify(result, null, 2))
+	}
+}
